@@ -1,4 +1,4 @@
-package ix.solution.consulting.exception.notice;
+package ix.solution.consulting.exception.board;
 
 import ix.solution.consulting.exception.common.ErrorCode;
 import ix.solution.consulting.exception.common.InvalidParameterException;
@@ -12,8 +12,8 @@ import org.springframework.validation.Errors;
  * @since 2.6.3 spring boot
  * @since 0.0.1 dev
  */
-public class InvalidNoticeParameterException extends InvalidParameterException {
-    public InvalidNoticeParameterException(Errors errors, ErrorCode errorCode) {
+public class InvalidBoardParameterException extends InvalidParameterException {
+    public InvalidBoardParameterException(Errors errors, ErrorCode errorCode) {
         super(errors, errorCode);
     }
 }

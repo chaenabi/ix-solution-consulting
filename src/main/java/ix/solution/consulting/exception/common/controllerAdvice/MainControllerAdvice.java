@@ -62,7 +62,7 @@ public class MainControllerAdvice {
      * 예시: StrangeProtocol://www.homepage.com/...
      * 예시: http://www.homepage.com?data={HackingAttack}
      * <p>
-     * IllegalArgumentException과 MalformedURLException은 한 묶음입니다.
+     * IllegalArgumentException 과 MalformedURLException 은 한 묶음입니다.
      *
      * @return 400
      */
