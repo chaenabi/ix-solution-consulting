@@ -18,7 +18,7 @@ import java.util.Objects;
  *
  * @author MC Lee
  * @created 2022-05-18
- * @since 2.6.3 spring boot
+ * @since 2.6.7 spring boot
  * @since 0.0.1 dev
  */
 @Slf4j
