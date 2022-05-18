@@ -1,7 +1,7 @@
 package ix.solution.consulting.api.member.domain.enums;
 
 public enum Role {
-    NORMAL("일반"), VIP("VIP");
+    ADMIN("관리자"), NORMAL("일반"), VIP("VIP");
 
     private final String role;
 
