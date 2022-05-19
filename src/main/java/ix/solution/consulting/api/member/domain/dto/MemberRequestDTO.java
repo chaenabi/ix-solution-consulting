@@ -10,7 +10,7 @@ import javax.validation.constraints.NotNull;
 public class MemberRequestDTO {
 
     @RequiredArgsConstructor
-    static class Register {
+    public static class Register {
         @NotNull(message = ErrorMessage.MEMBER_NAME_IS_NULL)
         @NotEmpty(message = ErrorMessage.MEMBER_NAME_IS_EMPTY)
         private final String name;
@@ -19,5 +19,4 @@ public class MemberRequestDTO {
         @NotEmpty(message = ErrorMessage.MEMBER_PASSWORD_IS_EMPTY)
         private final String password;
     }
-
 }
