@@ -53,7 +53,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
      * 토큰 문자열 분리
      *
      * @param request 요청 객체
-     * @return "Bearer "
+     * @return "Bearer "가 제거된
      */
     private String resolveToken(HttpServletRequest request) {
         String bearerToken = request.getHeader(AUTHORIZATION_HEADER);
@@ -70,8 +70,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
      * @param status HttpStatus
      * @param response HttpServletResponse
      * @param e BizException
+     * @notuse
      */
-    public void sendErrorResponse(HttpStatus status, HttpServletResponse response, BizException e) throws IOException {
+    /*
+    private void sendErrorResponse(HttpStatus status, HttpServletResponse response, BizException e) throws IOException {
         response.setStatus(status.value());
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
@@ -82,6 +84,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 .build();
         response.getWriter().write(responseDTO.toString());
     }
+     */
 }
 
 

@@ -27,6 +27,6 @@ public class CustomUserDetailsService implements UserDetailsService {
         MemberVO memberVO = new MemberVO();
         BeanUtils.copyProperties(member, memberVO);
 
-        return new AccountContext(memberVO, List.of(new SimpleGrantedAuthority(member.getRole().getRoleAsString())));
+        return new AccountContext(memberVO, List.of(new SimpleGrantedAuthority(member.getRole().name())));
     }
 }

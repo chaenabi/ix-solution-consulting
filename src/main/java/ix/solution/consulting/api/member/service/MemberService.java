@@ -42,7 +42,7 @@ public class MemberService {
             throw new BizException(MemberCrudErrorCode.MEMBER_PASSWORD_IS_INVALID);
 
         JwtUtil jwtUtil = new JwtUtil();
-        jwtUtil.setTokenIngredient(member.getName());
+        jwtUtil.setTokenCreationIngredient(member.getNickname());
 
         return MemberResponseDTO.SignIn.builder()
                 .id(member.getId())
@@ -50,7 +50,5 @@ public class MemberService {
                 .nickname(member.getNickname())
                 .accessToken(jwtUtil.createAccessToken())
                 .build();
-
-
     }
 }

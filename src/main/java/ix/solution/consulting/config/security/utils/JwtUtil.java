@@ -41,7 +41,7 @@ public class JwtUtil {
     private static final Pattern isValidTokenFormat = Pattern.compile("(^[A-Za-z0-9-_]*\\.[A-Za-z0-9-_]*\\.[A-Za-z0-9-_]*$)");
     private ThreadLocal<String> memberName = null;
 
-    public void setTokenIngredient(String memberName) {
+    public void setTokenCreationIngredient(String memberName) {
         ThreadLocal<String> threadLocal = new ThreadLocal<>();
         threadLocal.set(memberName);
         this.memberName = threadLocal;
@@ -107,7 +107,7 @@ public class JwtUtil {
      * @param accessToken 유저가 전달한 액세스 토큰
      * @return 액세스 토큰의 페이로드에 존재하는 비공개 클레임 memberId의 값
      */
-    private String decodePayload(String accessToken) {
+    public String decodePayload(String accessToken) {
         try {
             if (!isValidTokenFormat.matcher(accessToken).matches()) {
                 log.error("정상적인 토큰이 아닙니다. 클라이언트가 변조된 토큰을 전달했을 가능성이 있습니다.");
@@ -142,7 +142,7 @@ public class JwtUtil {
      */
     public String verifyToken(String accessToken, String refreshToken) {
         if (accessToken == null) throw new BizException(MemberCrudErrorCode.NOT_SIGNED);
-        setTokenIngredient(decodePayload(accessToken));
+        setTokenCreationIngredient(decodePayload(accessToken));
         /*
         if (!(isValidAccessToken(accessToken))) {
             return verifyRefreshToken(refreshToken);

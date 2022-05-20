@@ -1,18 +1,15 @@
 package ix.solution.consulting.config.security.provider;
 
 import ix.solution.consulting.config.security.tokens.JwtAuthenticationToken;
+import ix.solution.consulting.config.security.utils.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationProvider;
-import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.authentication.InsufficientAuthenticationException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.web.authentication.WebAuthenticationDetails;
 import org.springframework.stereotype.Component;
 
 @Slf4j
@@ -20,13 +17,8 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class JwtAuthenticationProvider implements AuthenticationProvider {
 
-    private UserDetailsService userDetailsService;
-    private PasswordEncoder passwordEncoder;
-
-    @Autowired
-    public void setUserDetailsService(UserDetailsService userDetailsService) {
-        this.userDetailsService = userDetailsService;
-    }
+    // use CustomUserDetailsService
+    private final UserDetailsService userDetailsService;
 
     /**
      * @param authentication 사용자가 입력한 인증 정보가 담겨있는 파라매터. getName: 아이디, getCredential: 비밀번호.
@@ -36,27 +28,26 @@ public class JwtAuthenticationProvider implements AuthenticationProvider {
      *                       <br> AuthenticationProvider 는 authenticate() 를 실행하는 도중
      *                       <br> 인증에 필요한 정보들을 UserDetailsService 에서 꺼내와 비교한다.
      * @return 인증처리 결과값 (데이터베이스에 저장된--즉 CustomUserDetailsService 의 loadUserByUsername 에서 꺼내온--
-     *                       <br> 데이터와 유저가 입력한 값이 일치한지 검증한 결과)
+     * <br> 데이터와 유저가 입력한 값이 일치한지 검증한 결과)
      * @throws AuthenticationException 인증처리 실패
      */
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
 
-        UserDetails userDetails = userDetailsService.loadUserByUsername(authentication.getName());
-        String password = (String) authentication.getCredentials();
+        JwtUtil jwtUtil = new JwtUtil();
+        JwtAuthenticationToken token = (JwtAuthenticationToken) authentication;
+        String nickname = jwtUtil.decodePayload(String.valueOf(token.getJsonWebToken()));
+        //jwtUtil.setTokenCreationIngredient(nickname);
 
-        // 이미 저장되어 있는 암호와 유저가 인증을 시도했을때 작성한 비밀번호가 맞는지 검사하여 일치하지 않으면 인증실패가 되도록 처리
-        if (!passwordEncoder.matches(password, userDetails.getPassword())) {
-            throw new BadCredentialsException("인증 실패. 비밀번호가 다릅니다.");
-        }
+        UserDetails userDetails = userDetailsService.loadUserByUsername(nickname);
 
-        // jwt 추가 검증
+        // TODO: jwt 검증
 
-       // if (userDetails.getSecretKey() == null || !secret.getSecretKey().equals("secret")) {
-       //     throw new InsufficientAuthenticationException("인증하는데 필요한 정보가 불충분합니다.");
-        //}
+        // if (userDetails.getSecretKey() == null || !secret.getSecretKey().equals("secret")) {
+        //     throw new InsufficientAuthenticationException("인증하는데 필요한 정보가 불충분합니다.");
+        // }
 
-        return new JwtAuthenticationToken(userDetails.getUsername(), userDetails.getPassword(), userDetails.getAuthorities());
+        return new JwtAuthenticationToken(nickname, null, userDetails.getAuthorities());
     }
 
     /**
