@@ -22,6 +22,6 @@ public class MemberVO {
     private String name;
     private String nickname;
     private String password;
-    private List<MemberRole> role;
+    private MemberRole role;
     private LocalDateTime registerDate;
 }

@@ -6,8 +6,6 @@ import ix.solution.consulting.api.member.domain.enums.MemberRole;
 import ix.solution.consulting.exception.common.ErrorMessage;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Component;
 
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
@@ -40,7 +38,7 @@ public class MemberRequestDTO {
                     .name(name)
                     .nickname(nickname)
                     .password(password)
-                    .role(MemberRole.ADMIN) // 일반회원의 회원가입을 고려하지 않으며, 관리자의 가입만 고려함. 또한 회원가입은 다른 관리자에 의해서만 가능
+                    .role(MemberRole.ROLE_ADMIN) // 일반회원의 회원가입을 고려하지 않으며, 관리자의 가입만 고려함. 또한 회원가입은 다른 관리자에 의해서만 가능
                     .build();
         }
     }

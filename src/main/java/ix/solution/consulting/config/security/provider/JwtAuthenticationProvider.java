@@ -42,6 +42,7 @@ public class JwtAuthenticationProvider implements AuthenticationProvider {
         UserDetails userDetails = userDetailsService.loadUserByUsername(nickname);
 
         // TODO: jwt 검증
+        
 
         // if (userDetails.getSecretKey() == null || !secret.getSecretKey().equals("secret")) {
         //     throw new InsufficientAuthenticationException("인증하는데 필요한 정보가 불충분합니다.");
