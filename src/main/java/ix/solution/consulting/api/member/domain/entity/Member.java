@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 
 @Entity
 @Getter
-@Table(name = "member", indexes = @Index(name = "ix_nickname", columnList = "nickname"))
+@Table(name = "member", indexes = @Index(name = "ix_nickname", columnList = "nickname", unique = true))
 public class Member {
 
     @Id
