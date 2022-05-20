@@ -15,6 +15,9 @@ spring:
       hibernate:
         format_sql: true
     show-sql: true
+
+    # 테이블이 생성된 이후에 insert 를 실행합니다.
+    defer-datasource-initialization: true
   h2:
     console:
       enabled: true

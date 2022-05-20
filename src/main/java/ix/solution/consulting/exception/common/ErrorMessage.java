@@ -25,6 +25,16 @@ public class ErrorMessage {
     public static final String MEMBER_PASSWORD_IS_NULL = "회원의 암호가 반드시 전달되어야 합니다.";
     public static final String MEMBER_NAME_IS_EMPTY = "회원의 이름이 비어 있으면 안됩니다.";
     public static final String MEMBER_PASSWORD_IS_EMPTY = "회원 암호가 비어 있으면 안됩니다.";
+    public static final String MEMBER_PASSWORD_IS_INVALID = "비밀번호가 일치하지 않아 로그인이 실패했습니다.";
     public static final String MEMBER_NOT_FOUND = "해당 회원이 존재하지 않습니다.";
+
+    public static final String MEMBER_NICKNAME_IS_NULL = "회원의 이름이 반드시 전달되어야 합니다.";
+    public static final String MEMBER_NICKNAME_IS_EMPTY = "회원의 이름이 비어 있으면 안됩니다.";
+
+    public static final String ACCESS_TOKEN_INVALID = "액세스 토큰 정보가 유효하지 않습니다";
+    public static final String REFRESH_TOKEN_INVALID = "리프레시 토큰 정보가 유효하지 않습니다";
+    public static final String ACCESS_TOKEN_EXPIRED = "액세스 토큰이 만료되었습니다";
+    public static final String REFRESH_TOKEN_EXPIRED = "리프레시 토큰이 만료되었습니다.";
+    public static final String NOT_SIGNED = "로그인되지 않은 유저로부터 요청이 들어왔습니다";
     // end of member error
 }

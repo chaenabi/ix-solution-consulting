@@ -41,6 +41,16 @@ public class MainControllerAdvice {
     }
 
     /**
+     * 인수값이 NULL 일 경우 동작합니다.
+     *
+     * @return 500
+     */
+    @ExceptionHandler(NullPointerException.class)
+    protected ResponseEntity<ErrorResponseDTO> handleNPE(NullPointerException e) {
+        return handleGeneralException(HttpStatus.INTERNAL_SERVER_ERROR, e);
+    }
+
+    /**
      * - @Valid 에서 모든 파라미터가 비어있을경우 발생합니다.
      *
      * @return 404
