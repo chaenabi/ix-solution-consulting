@@ -117,7 +117,7 @@ public class JwtAuthenticationFilterTest {
         mockRequest.addHeader("Authorization", "Bearer valid_token");
         JwtAuthenticationToken token = new JwtAuthenticationToken("valid_token");
         JwtAuthenticationToken authenticatedToken = new JwtAuthenticationToken(
-                "MC LEE",
+                "MC Lee",
                 "",
                 Collections.singletonList(() -> "ROLE_ADMIN")
         );

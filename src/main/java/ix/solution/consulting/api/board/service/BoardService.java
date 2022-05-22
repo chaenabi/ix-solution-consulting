@@ -23,6 +23,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * 게시물 CRUD 요청 처리 서비스
@@ -66,7 +67,6 @@ public class BoardService {
         return post.getPostId();
     }
 
-    // TODO: 댓글 포함 전달 (첨부파일은 text 이므로 상관없음)
     @Transactional(readOnly = true, rollbackFor = RuntimeException.class)
     public BoardResponseDTO.PostOne findOnePost(Long postId) {
         Board post = postRepository.findById(postId)
@@ -85,18 +85,24 @@ public class BoardService {
         return pageResponseDTO;
     }
 
-    public BoardResponseDTO.PatchPost updateOnePost(BoardRequestDTO.UpdatePostRequest dto) {
-        Board post = postRepository.findById(dto.getPostId())
+    public BoardResponseDTO.PatchPost updateOnePost(BoardRequestDTO.UpdatePost dto) {
+        Board findPost = postRepository.findById(dto.getPostId())
                 .orElseThrow(() -> new BizException(BoardCrudErrorCode.POST_NOT_FOUND));
 
-        return new BoardResponseDTO.PatchPost(post.updatePost(dto.toEntity()));
+        if (!Objects.equals(dto.getMemberId(), findPost.getMember().getId()))
+            throw new BizException(BoardCrudErrorCode.POST_AUTHOR_NOT_MATCH);
+
+        return new BoardResponseDTO.PatchPost(findPost.updatePost(dto.toEntity()));
     }
 
-    public LocalDateTime deleteOnePost(Long postId) {
-        Board canFindPost = postRepository.findById(postId)
+    public void deleteOnePost(BoardRequestDTO.RemovePost wantToDelete) {
+        Board findPost = postRepository.findById(wantToDelete.getPostId())
                 .orElseThrow(() -> new BizException(BoardCrudErrorCode.POST_NOT_FOUND));
-        postRepository.delete(canFindPost);
-        return LocalDateTime.now();
+
+        if (!Objects.equals(wantToDelete.getMemberId(), findPost.getMember().getId()))
+            throw new BizException(BoardCrudErrorCode.POST_AUTHOR_NOT_MATCH);
+
+        postRepository.delete(findPost);
     }
 
     public List<BoardResponseDTO.UploadPostAttachFile> uploadMediaFiles(AttachFileMediaType fileType, List<MultipartFile> attachFiles) {

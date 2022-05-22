@@ -27,8 +27,9 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
             countQuery = "SELECT count(p) FROM Board p WHERE p.blocked = false ")
     Page<Board> findAllUnblockedPosts(Pageable pageable);
 
-    @Query(value = "SELECT p " +
-            "FROM Board p join fetch p.member m " +
+    @Query(value = "SELECT distinct p " +
+            "FROM Board p join fetch p.comments m " +
+            "join fetch p.member " +
             "WHERE p.blocked = false " +
             "AND p.postId = :postId")
     Optional<Board> findById(@Param("postId") Long postId);

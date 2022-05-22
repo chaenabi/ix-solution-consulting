@@ -31,18 +31,13 @@ public class Board {
     private Long postId;
 
     private String postTitle;
-
-    @Lob
     private String postContent;
-
-    //@OneToMany(fetch = FetchType.LAZY, mappedBy = "post")
-    //private List<PostAttachFile> attachFilesPath;
-
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "post")
-    private List<Comment> comments;
 
     @Convert(converter = YNToBooleanConverter.class)
     private Boolean blocked;
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "post")
+    private List<Comment> comments;
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST})
     @JoinColumn(name = "member_id")

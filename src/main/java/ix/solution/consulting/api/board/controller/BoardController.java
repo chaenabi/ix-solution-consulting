@@ -12,14 +12,13 @@ import ix.solution.consulting.exception.common.BizException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
-import org.springframework.util.ObjectUtils;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
-import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -44,18 +43,21 @@ public class BoardController {
      * @param dto 게시물 제목, 게시물 내용, 이미지 주소 (선택사항)
      * @return 성공적으로 저장된 게시물의 고유 아이디
      */
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PostMapping("/posts")
     public ResponseDTO<Long> savePost(@Valid @RequestBody BoardRequestDTO.PostSaveRequest dto, BindingResult result) {
         if (result.hasErrors()) throw new InvalidBoardParameterException(result, BoardCrudErrorCode.BOARD_CRUD_FAIL);
         return new ResponseDTO<>(boardService.savePost(dto), BoardMessage.SAVE_POST_SUCCESS, HttpStatus.OK);
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PostMapping("/posts/attachFiles")
     public ResponseDTO<List<BoardResponseDTO.UploadPostAttachFile>> uploadMediaFiles(AttachFileMediaType fileType, List<MultipartFile> attachFiles) {
         if (attachFiles.isEmpty()) throw new BizException(BoardCrudErrorCode.POST_MEDIA_NOT_CONTAINS);
         return new ResponseDTO<>(boardService.uploadMediaFiles(fileType, attachFiles), BoardMessage.SAVE_ATTACH_FILE_SUCCESS, HttpStatus.OK);
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @DeleteMapping("/posts/attachFiles")
     public ResponseDTO<Void> removeMediaFiles(@RequestParam String attachFiles) {
         if (!StringUtils.hasText(attachFiles)) throw new BizException(BoardCrudErrorCode.MISSING_ATTACH_FILE_NAME);
@@ -63,10 +65,19 @@ public class BoardController {
         return new ResponseDTO<>(BoardMessage.REMOVE_ATTACH_FILE_SUCCESS, HttpStatus.OK);
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PatchMapping("/posts")
-    public ResponseDTO<BoardResponseDTO.PatchPost> updateOnePost(@Valid @RequestBody BoardRequestDTO.UpdatePostRequest dto, BindingResult result) {
+    public ResponseDTO<BoardResponseDTO.PatchPost> updateOnePost(@Valid @RequestBody BoardRequestDTO.UpdatePost dto, BindingResult result) {
         if (result.hasErrors()) throw new InvalidBoardParameterException(result, BoardCrudErrorCode.BOARD_CRUD_FAIL);
         return new ResponseDTO<>(boardService.updateOnePost(dto), BoardMessage.UPDATE_POST_SUCCESS, HttpStatus.OK);
+    }
+
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @DeleteMapping("/posts")
+    public ResponseDTO<Void> deleteOnePost(@Valid @RequestBody BoardRequestDTO.RemovePost post, BindingResult result) {
+        if (result.hasErrors()) throw new InvalidBoardParameterException(result, BoardCrudErrorCode.BOARD_CRUD_FAIL);
+        boardService.deleteOnePost(post);
+        return new ResponseDTO<>(BoardMessage.DELETE_POST_SUCCESS, HttpStatus.OK);
     }
 
     @GetMapping("/posts/{postId}")
@@ -79,8 +90,5 @@ public class BoardController {
         return new ResponseDTO<>(boardService.findPostsPage(page), BoardMessage.FIND_POST_PAGE_SUCCESS, HttpStatus.OK);
     }
 
-    @DeleteMapping("/posts/{postId}")
-    public ResponseDTO<LocalDateTime> deleteOnePost(@PathVariable Long postId) {
-        return new ResponseDTO<>(boardService.deleteOnePost(postId), BoardMessage.DELETE_POST_SUCCESS, HttpStatus.OK);
-    }
+
 }

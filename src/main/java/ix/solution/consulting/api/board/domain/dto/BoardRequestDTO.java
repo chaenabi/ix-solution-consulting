@@ -70,10 +70,13 @@ public class BoardRequestDTO {
      * @since 0.0.1 dev
      */
     @Getter
-    public static class UpdatePostRequest {
+    public static class UpdatePost {
 
         @NotNull(message = ErrorMessage.MISSING_POST_ID)
         private final Long postId;
+
+        @NotNull(message = ErrorMessage.MEMBER_ID_IS_NULL)
+        private final Long memberId;
 
         @NotNull(message = ErrorMessage.POST_TITLE_IS_NULL)
         @NotEmpty(message = ErrorMessage.POST_TITLE_IS_EMPTY)
@@ -85,9 +88,10 @@ public class BoardRequestDTO {
         //@Length(max = 2000, message = "게시물 내용은 2000 글자를 초과할 수없습니다.")
         private final String postContent;
 
-        @ConstructorProperties({"postId", "postTitle", "postContent"})
-        public UpdatePostRequest(Long postId, String postTitle, String postContent) {
+        @ConstructorProperties({"postId", "memberId", "postTitle", "postContent"})
+        public UpdatePost(Long postId, Long memberId, String postTitle, String postContent) {
             this.postId = postId;
+            this.memberId = memberId;
             this.postTitle = postTitle == null ? null : postTitle.trim();
             this.postContent = postContent == null ? null : postContent.trim();
         }
@@ -98,6 +102,21 @@ public class BoardRequestDTO {
                     .postTitle(postTitle)
                     .postContent(postContent)
                     .build();
+        }
+    }
+
+    @Getter
+    public static class RemovePost {
+        @NotNull(message = ErrorMessage.POST_ID_IS_NULL)
+        private final Long postId;
+
+        @NotNull(message = ErrorMessage.MEMBER_ID_IS_NULL)
+        private final Long memberId;
+
+        @ConstructorProperties({"postId", "memberId"})
+        public RemovePost(Long postId, Long memberId) {
+            this.postId = postId;
+            this.memberId = memberId;
         }
     }
 

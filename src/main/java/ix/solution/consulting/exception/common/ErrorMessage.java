@@ -22,6 +22,7 @@ public class ErrorMessage {
     public static final String POST_MEDIA_NOT_CONTAINS = "첨부파일이 존재하지 않습니다.";
     public static final String MISSING_ATTACH_FILE_NAME = "첨부파일명이 제대로 전달되지 못했습니다.";
     public static final String FAIL_TO_DELETE_ATTACH_FILE = "첨부파일 삭제 중 오류가 발생했습니다.";
+    public static final String POST_AUTHOR_NOT_MATCH = "작성자 본인만 게시물을 수정 및 삭제할 수 있습니다.";
     // end of board error
 
     // member error
@@ -45,4 +46,19 @@ public class ErrorMessage {
     public static final String REFRESH_TOKEN_EXPIRED = "리프레시 토큰이 만료되었습니다.";
     public static final String NOT_SIGNED = "로그인되지 않은 유저로부터 요청이 들어왔습니다";
     // end of member error
+
+    // comment error
+    public static final String COMMENT_CRUD_FAIL = "댓글 관련 처리 요청이 실패했습니다.";
+    public static final String COMMENT_ID_IS_NULL = "댓글 아이디가 반드시 필요합니다.";
+    public static final String COMMENT_ID_IS_EMPTY = "댓글 아이디가 비어 있으면 안됩니다.";
+    public static final String COMMENT_CONTENT_IS_NULL = "댓글 내용이 반드시 필요합니다.";
+    public static final String COMMENT_CONTENT_IS_EMPTY = "댓글 내용이 비어 있으면 안됩니다.";
+    public static final String COMMENT_WRITER_IS_NULL = "댓글 작성자 이름이 반드시 필요합니다";
+    public static final String COMMENT_WRITER_IS_EMPTY = "댓글 작성자 이름이 비어 있으면 안됩니다.";
+    public static final String COMMENT_PASSWORD_IS_NULL = "댓글 비밀번호가 반드시 필요합니다.";
+    public static final String COMMENT_PASSWORD_IS_EMPTY = "댓글 비밀번호가 비어있으면 안 됩니다.";
+    public static final String COMMENT_NOT_FOUND = "해당 댓글을 찾을 수 없습니다.";
+    public static final String COMMENT_PASSWORD_NOT_MATCH = "댓글 비밀번호가 맞지 않습니다.";
+    public static final String FAIL_TO_DELETE_COMMENT = "댓글을 삭제하는데 실패했습니다.";
+    // end of comment error
 }
