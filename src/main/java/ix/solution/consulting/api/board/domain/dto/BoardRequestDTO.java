@@ -1,6 +1,7 @@
 package ix.solution.consulting.api.board.domain.dto;
 
 import ix.solution.consulting.api.board.domain.entity.Board;
+import ix.solution.consulting.exception.common.ErrorMessage;
 import lombok.Getter;
 import org.hibernate.validator.constraints.Length;
 
@@ -22,30 +23,34 @@ public class BoardRequestDTO {
     @Getter
     public static class PostSaveRequest {
 
-        @NotNull(message = "게시물 제목이 반드시 전달되어야 합니다.")
-        @NotEmpty(message = "게시물 제목이 비어 있으면 안됩니다.")
-        @Length(max = 30, message = "게시물 제목은 30 글자를 초과할 수 없습니다.")
+        @NotNull(message = ErrorMessage.POST_TITLE_IS_NULL)
+        @NotEmpty(message = ErrorMessage.POST_TITLE_IS_EMPTY)
+        //@Length(max = 30, message = "게시물 제목은 30 글자를 초과할 수 없습니다.")
         private final String postTitle;
 
-        @NotNull(message = "게시물 내용이 반드시 전달되어야 합니다.")
-        @NotEmpty(message = "게시물 내용이 비어 있으면 안됩니다.")
-        @Length(max = 2000, message = "게시물 내용은 2000 글자를 초과할 수 없습니다.")
+        @NotNull(message = ErrorMessage.POST_CONTENT_IS_NULL)
+        @NotEmpty(message = ErrorMessage.POST_CONTENT_IS_EMPTY)
+        //@Length(max = 2000, message = "게시물 내용은 2000 글자를 초과할 수 없습니다.")
         private final String postContent;
 
-        private final String image;
+        @NotNull(message = "")
+        private final Long memberId;
+
+        private final String imagePath;
 
         @ConstructorProperties({"postTitle", "postContent", "image"})
-        public PostSaveRequest(String postTitle, String postContent, String image) {
+        public PostSaveRequest(String postTitle, String postContent, Long memberId, String imagePath) {
             this.postTitle = postTitle == null ? null : postTitle.trim();
-            this.postContent = postContent == null ? null : postContent.trim();
-            this.image = image;
+            this.postContent = postContent;
+            this.memberId = memberId;
+            this.imagePath = imagePath;
         }
 
         public Board toEntity() {
             return Board.builder()
                     .postTitle(getPostTitle())
                     .postContent(getPostContent())
-                    .image(getImage())
+                    .imagePath(getImagePath())
                     .build();
 
         }
@@ -76,14 +81,14 @@ public class BoardRequestDTO {
         @Length(max = 2000, message = "게시물 내용은 2000 글자를 초과할 수 없습니다.")
         private final String postContent;
 
-        private final String image;
+        private final String imagePath;
 
-        @ConstructorProperties({ "postId", "postTitle", "postContent", "image"})
-        public PostPatchRequest(Long postId, String postTitle, String postContent, String image) {
+        @ConstructorProperties({"postId", "postTitle", "postContent", "image"})
+        public PostPatchRequest(Long postId, String postTitle, String postContent, String imagePath) {
             this.postId = postId;
             this.postTitle = postTitle == null ? null : postTitle.trim();
             this.postContent = postContent == null ? null : postContent.trim();
-            this.image = image;
+            this.imagePath = imagePath;
         }
 
         public Board toEntity() {
@@ -91,11 +96,10 @@ public class BoardRequestDTO {
                     .postId(getPostId())
                     .postTitle(getPostTitle())
                     .postContent(getPostContent())
-                    .image(getImage())
+                    .imagePath(getImagePath())
                     .build();
         }
     }
-
 
 
 }

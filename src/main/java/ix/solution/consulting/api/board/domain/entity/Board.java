@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 import javax.persistence.*;
+import java.sql.Blob;
 
 /**
  * 게시물 엔티티
@@ -29,9 +30,10 @@ public class Board {
 
     private String postTitle;
 
+    @Lob
     private String postContent;
 
-    private String image;
+    private String imagePath;
 
     @Convert(converter = YNToBooleanConverter.class)
     private Boolean blocked;
@@ -47,11 +49,11 @@ public class Board {
     }
 
     @Builder
-    public Board(Long postId, String postTitle, String postContent, String image, Member member) {
+    public Board(Long postId, String postTitle, String postContent, String imagePath, Member member) {
         this.postId = postId;
         this.postTitle = postTitle;
         this.postContent = postContent;
-        this.image = image;
+        this.imagePath = imagePath;
         this.member = member;
         this.blocked = false;
     }
@@ -59,7 +61,7 @@ public class Board {
     public Board updatePost(Board wantToChange) {
         this.postTitle = wantToChange.getPostTitle();
         this.postContent = wantToChange.getPostContent();
-        this.image = wantToChange.getImage();
+        this.imagePath = wantToChange.getImagePath();
         return this;
     }
 

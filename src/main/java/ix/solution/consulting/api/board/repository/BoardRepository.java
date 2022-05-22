@@ -20,6 +20,7 @@ import java.util.Optional;
  */
 @Repository
 public interface BoardRepository extends JpaRepository<Board, Long> {
+
     @Query(value = "SELECT p " +
             "FROM Board p JOIN FETCH p.member m " +
             "WHERE p.blocked = false ",

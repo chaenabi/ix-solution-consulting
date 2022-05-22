@@ -16,14 +16,14 @@ public class BoardResponseDTO {
         private final String postTitle;
         private final String postContent;
         private final String nickname;
-        private final String image;
+        private final String imagePath;
 
         public PostOne(Board board) {
             this.postId = board.getPostId();
             this.postTitle = board.getPostTitle();
             this.postContent = board.getPostContent();
             this.nickname = board.getMember().getNickname();
-            this.image = board.getImage();
+            this.imagePath = board.getImagePath();
         }
     }
 
@@ -46,12 +46,12 @@ public class BoardResponseDTO {
     public static class PatchPost {
         private final String postTitle;
         private final String postContent;
-        private final String image;
+        private final String imagePath;
 
         public PatchPost(Board board) {
             this.postTitle = board.getPostTitle();
             this.postContent = board.getPostContent();
-            this.image = board.getImage();
+            this.imagePath = board.getImagePath();
         }
     }
 
