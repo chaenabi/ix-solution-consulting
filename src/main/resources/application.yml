@@ -22,4 +22,4 @@ spring:
     console:
       enabled: true
 
-upload-directory: src/main/resources/upload
+upload-directory: src/main/resources/upload/

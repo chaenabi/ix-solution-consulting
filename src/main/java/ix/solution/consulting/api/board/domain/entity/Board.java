@@ -1,6 +1,7 @@
 package ix.solution.consulting.api.board.domain.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import ix.solution.consulting.api.board.comment.domain.entity.Comment;
 import ix.solution.consulting.api.member.domain.entity.Member;
 import lombok.Builder;
 import lombok.Getter;
@@ -8,6 +9,7 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 import javax.persistence.*;
+import java.util.List;
 
 /**
  * 게시물 엔티티
@@ -33,8 +35,11 @@ public class Board {
     @Lob
     private String postContent;
 
-    private String imagePath;
-    private String videoPath;
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "post")
+    private List<PostAttachFile> attachFilesPath;
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "post")
+    private List<Comment> comments;
 
     @Convert(converter = YNToBooleanConverter.class)
     private Boolean blocked;
@@ -43,26 +48,23 @@ public class Board {
     @JoinColumn(name = "member_id")
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     @ToString.Exclude
-    private Member member;
-
-    public void setMember(Member member) {
-        this.member = member;
-    }
+    private Member author;
 
     @Builder
-    public Board(Long postId, String postTitle, String postContent, String imagePath, Member member) {
+    public Board(Long postId, String postTitle, String postContent, List<PostAttachFile> attachFilesPath, List<Comment> comments, Member author) {
         this.id = postId;
         this.postTitle = postTitle;
         this.postContent = postContent;
-        this.imagePath = imagePath;
-        this.member = member;
+        this.attachFilesPath = attachFilesPath;
+        this.author = author;
+        this.comments = comments;
         this.blocked = false;
     }
 
     public Board updatePost(Board wantToChange) {
         this.postTitle = wantToChange.getPostTitle();
         this.postContent = wantToChange.getPostContent();
-        this.imagePath = wantToChange.getImagePath();
+        this.attachFilesPath = wantToChange.getAttachFilesPath();
         return this;
     }
 

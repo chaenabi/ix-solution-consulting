@@ -14,4 +14,5 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public interface PostAttachFileRepository extends JpaRepository<PostAttachFile, Long>, PostAttachFileQueryDSLRepository {
+    PostAttachFile findByFilename(String filename);
 }

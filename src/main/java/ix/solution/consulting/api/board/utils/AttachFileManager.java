@@ -1,8 +1,11 @@
 package ix.solution.consulting.api.board.utils;
 
 import ix.solution.consulting.api.board.domain.dto.BoardRequestDTO;
-import ix.solution.consulting.api.board.domain.entity.Board;
+import ix.solution.consulting.api.board.domain.dto.BoardResponseDTO;
 import ix.solution.consulting.api.board.domain.entity.PostAttachFile;
+import ix.solution.consulting.exception.board.BoardCrudErrorCode;
+import ix.solution.consulting.exception.common.BizException;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
@@ -29,6 +32,7 @@ import static org.apache.commons.io.FilenameUtils.getExtension;
  * @since 2.6.7 spring boot
  * @since 0.0.1 dev
  */
+@Slf4j
 @Component
 public class AttachFileManager {
 
@@ -42,11 +46,11 @@ public class AttachFileManager {
      * @param attachFiles 업로드된 첨부파일들
      * @return 수정된 첨부파일명 (첨부파일명_날짜(년월일시간분초)_UUID일부분.확장자명)
      */
-    public List<PostAttachFile> saveUploadFilesToDisk(List<MultipartFile> attachFiles, Board post) {
-        List<BoardRequestDTO.PostAttachFileDTO> files = renameFile(attachFiles, post);
-        List<PostAttachFile> result = new ArrayList<>();
+    public List<BoardResponseDTO.UploadPostAttachFile> saveUploadFilesToDisk(final List<MultipartFile> attachFiles) {
+        final List<BoardRequestDTO.PostAttachFileDTO> files = renameFile(attachFiles);
+        final List<BoardResponseDTO.UploadPostAttachFile> result = new ArrayList<>();
 
-        File folder = new File(DEFAULT_UPLOAD_DIRECTORY);
+        final File folder = new File(DEFAULT_UPLOAD_DIRECTORY);
 
         if (!folder.exists()) {
             try {
@@ -56,7 +60,7 @@ public class AttachFileManager {
             }
         }
 
-        int attachFileMeasure = attachFiles.size();
+        final int attachFileMeasure = attachFiles.size();
         for (int i = 0; i < attachFileMeasure; i++) {
             try {
                 attachFiles.get(i).transferTo(Paths.get(files.get(i).getFilename()));
@@ -64,8 +68,21 @@ public class AttachFileManager {
                 throw new RuntimeException(e.getMessage());
             }
         }
-        files.forEach(file -> result.add(file.toEntity()));
+        files.forEach(file -> result.add(file.toResponseDTO()));
         return result;
+    }
+
+    public void deleteFilesToDisk(String attachFile) {
+        final File file = new File(DEFAULT_UPLOAD_DIRECTORY + attachFile);
+        if (file.exists()) {
+            if (file.delete()) log.info("{} 삭제 완료.", attachFile);
+            else throw new BizException(BoardCrudErrorCode.FAIL_TO_DELETE_ATTACH_FILE);
+        }
+    }
+
+    public boolean doesFileExist(String filename) {
+        final File file = new File(filename);
+        return file.exists();
     }
 
     /**
@@ -75,19 +92,19 @@ public class AttachFileManager {
      * 예를들어 원본파일명이 example.png 라면 c:/upload/example_20220128171150_bcdc8ebd.png 로 변경됩니다.
      *
      * @param attachFiles 업로드된 첨부파일들
-     * @param post      외래키 제약조건에 따라 이 공지사항에 부합하는 첨부파일을 저장하고 식별하기 위한 목적으로 사용
      * @return 수정된 첨부파일명
      */
-    private List<BoardRequestDTO.PostAttachFileDTO> renameFile(List<MultipartFile> attachFiles, Board post) {
-        List<BoardRequestDTO.PostAttachFileDTO> files = new ArrayList<>();
+    private List<BoardRequestDTO.PostAttachFileDTO> renameFile(List<MultipartFile> attachFiles) {
+        final List<BoardRequestDTO.PostAttachFileDTO> files = new ArrayList<>();
 
-        LocalDateTime now = LocalDateTime.now();
-        String randomString = UUID.randomUUID().toString().split("-")[0];
+        final LocalDateTime now = LocalDateTime.now();
+        final String randomString = UUID.randomUUID().toString().split("-")[0];
 
         attachFiles.forEach(file -> files.add(BoardRequestDTO.PostAttachFileDTO.builder()
-                .filename(DEFAULT_UPLOAD_DIRECTORY
-                        + "/"
-                        + getBaseName(file.getOriginalFilename())
+                    .originalFilename(file.getOriginalFilename())
+                    .filepath(DEFAULT_UPLOAD_DIRECTORY)
+                    .filename(
+                        getBaseName(file.getOriginalFilename())
                         + "_"
                         + now.format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss"))
                         + "_"
@@ -95,8 +112,8 @@ public class AttachFileManager {
                         + "."
                         + getExtension(file.getOriginalFilename())
                 )
-                .post(post)
                 .build()));
+
         return files;
     }
 }

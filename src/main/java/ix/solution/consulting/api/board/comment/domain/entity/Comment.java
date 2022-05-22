@@ -1,11 +1,10 @@
 package ix.solution.consulting.api.board.comment.domain.entity;
 
+import ix.solution.consulting.api.board.domain.entity.Board;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
@@ -23,4 +22,8 @@ public class Comment {
 
     @UpdateTimestamp
     private LocalDateTime UpdateAt;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "post_id")
+    private Board post;
 }

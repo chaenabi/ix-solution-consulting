@@ -1,6 +1,9 @@
 package ix.solution.consulting.api.board.domain.dto;
 
 import ix.solution.consulting.api.board.domain.entity.Board;
+import ix.solution.consulting.api.board.domain.entity.PostAttachFile;
+import ix.solution.consulting.api.board.domain.enums.AttachFileMediaType;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -16,14 +19,14 @@ public class BoardResponseDTO {
         private final String postTitle;
         private final String postContent;
         private final String nickname;
-        private final String imagePath;
+        private final List<PostAttachFile> imagePath;
 
         public PostOne(Board board) {
-            this.postId = board.getPostId();
+            this.postId = board.getId();
             this.postTitle = board.getPostTitle();
             this.postContent = board.getPostContent();
-            this.nickname = board.getMember().getNickname();
-            this.imagePath = board.getImagePath();
+            this.nickname = board.getAuthor().getNickname();
+            this.imagePath = board.getAttachFilesPath();
         }
     }
 
@@ -46,13 +49,21 @@ public class BoardResponseDTO {
     public static class PatchPost {
         private final String postTitle;
         private final String postContent;
-        private final String imagePath;
 
         public PatchPost(Board board) {
             this.postTitle = board.getPostTitle();
             this.postContent = board.getPostContent();
-            this.imagePath = board.getImagePath();
         }
+    }
+
+    @Getter
+    @Builder
+    @RequiredArgsConstructor
+    public static class UploadPostAttachFile {
+        private final String originalFilename;
+        private final String filepath;
+        private final String filename;
+        private final AttachFileMediaType fileType;
     }
 
 }

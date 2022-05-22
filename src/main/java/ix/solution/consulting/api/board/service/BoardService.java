@@ -3,7 +3,10 @@ package ix.solution.consulting.api.board.service;
 import ix.solution.consulting.api.board.domain.dto.BoardRequestDTO;
 import ix.solution.consulting.api.board.domain.dto.BoardResponseDTO;
 import ix.solution.consulting.api.board.domain.entity.Board;
+import ix.solution.consulting.api.board.domain.entity.PostAttachFile;
 import ix.solution.consulting.api.board.repository.BoardRepository;
+import ix.solution.consulting.api.board.repository.PostAttachFileRepository;
+import ix.solution.consulting.api.board.utils.AttachFileManager;
 import ix.solution.consulting.api.member.domain.entity.Member;
 import ix.solution.consulting.api.member.repository.MemberRepository;
 import ix.solution.consulting.exception.board.BoardCrudErrorCode;
@@ -15,8 +18,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * 게시물 CRUD 요청 처리 서비스
@@ -33,23 +38,41 @@ public class BoardService {
 
     private final MemberRepository memberRepository;
     private final BoardRepository postRepository;
-    int pagingSize = 10;
+    private final PostAttachFileRepository postAttachFileRepository;
+    private final AttachFileManager attachFileManager;
+    final int pagingSize = 10;
 
     public Long savePost(BoardRequestDTO.PostSaveRequest dto) {
 
         Member member = memberRepository.findById(dto.getMemberId())
                 .orElseThrow(() -> new BizException(MemberCrudErrorCode.MEMBER_NOT_FOUND));
 
-        return postRepository.save(dto.toEntity(member))
-                .getId();
+        Board post = postRepository.save(dto.toEntity(member));
+
+        for (BoardRequestDTO.PostAttachFileDTO file : dto.getAttachFiles()) {
+            if (attachFileManager.doesFileExist(file.getFilepath() + file.getFilename())) {
+                postAttachFileRepository.save(
+                        PostAttachFile.builder()
+                                .originalFilename(file.getOriginalFilename())
+                                .filepath(file.getFilepath())
+                                .filename(file.getFilename())
+                                .fileType(file.getFileType())
+                                .post(post)
+                         .build());
+            }
+        }
+
+        return post.getId();
     }
 
+    @Transactional(readOnly = true, rollbackFor = RuntimeException.class)
     public BoardResponseDTO.PostOne findOnePost(Long postId) {
         Board post = postRepository.findById(postId)
                 .orElseThrow(() -> new BizException(BoardCrudErrorCode.POST_NOT_FOUND));
         return new BoardResponseDTO.PostOne(post);
     }
 
+    @Transactional(readOnly = true, rollbackFor = RuntimeException.class)
     public BoardResponseDTO.PageResponse findPostsPage(int page) {
         if ((page = page - 1) < 0) {
             throw new BizException(BoardCrudErrorCode.PAGE_NOT_FOUND);
@@ -68,6 +91,7 @@ public class BoardService {
     public BoardResponseDTO.PatchPost updateOnePost(BoardRequestDTO.UpdatePostRequest dto) {
         Board post = postRepository.findById(dto.getPostId())
                 .orElseThrow(() -> new BizException(BoardCrudErrorCode.POST_NOT_FOUND));
+
         return new BoardResponseDTO.PatchPost(post.updatePost(dto.toEntity()));
     }
 
@@ -76,5 +100,15 @@ public class BoardService {
                 .orElseThrow(() -> new BizException(BoardCrudErrorCode.POST_NOT_FOUND));
         postRepository.delete(canFindPost);
         return LocalDateTime.now();
+    }
+
+    public List<BoardResponseDTO.UploadPostAttachFile> uploadMediaFiles(List<MultipartFile> attachFiles) {
+        return attachFileManager.saveUploadFilesToDisk(attachFiles);
+    }
+
+    public void deleteMediaFiles(String attachFile) {
+        PostAttachFile wantToRemove = postAttachFileRepository.findByFilename(attachFile);
+        postAttachFileRepository.delete(wantToRemove);
+        attachFileManager.deleteFilesToDisk(attachFile);
     }
 }

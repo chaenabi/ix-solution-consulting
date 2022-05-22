@@ -18,6 +18,9 @@ public class ErrorMessage {
     public static final String POST_CONTENT_IS_EMPTY = "게시물 내용이 비어 있으면 안됩니다.";
     public static final String POST_NOT_FOUND = "해당 게시물이 존재하지 않습니다.";
     public static final String PAGE_NOT_FOUND = "해당 페이지가 존재하지 않습니다.";
+    public static final String MISSING_POST_ID = "게시물을 수정하려면 게시물 번호를 함께 보내주셔야 합니다.";
+    public static final String POST_MEDIA_NOT_CONTAINS = "첨부파일이 존재하지 않습니다.";
+    public static final String FAIL_TO_DELETE_ATTACH_FILE = "첨부파일 삭제 중 오류가 발생했습니다.";
     // end of board error
 
     // member error

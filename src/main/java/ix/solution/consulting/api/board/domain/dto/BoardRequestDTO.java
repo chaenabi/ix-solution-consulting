@@ -2,16 +2,17 @@ package ix.solution.consulting.api.board.domain.dto;
 
 import ix.solution.consulting.api.board.domain.entity.Board;
 import ix.solution.consulting.api.board.domain.entity.PostAttachFile;
+import ix.solution.consulting.api.board.domain.enums.AttachFileMediaType;
 import ix.solution.consulting.api.member.domain.entity.Member;
 import ix.solution.consulting.exception.common.ErrorMessage;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import org.hibernate.validator.constraints.Length;
 
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.beans.ConstructorProperties;
+import java.util.List;
 
 public class BoardRequestDTO {
 
@@ -40,24 +41,22 @@ public class BoardRequestDTO {
         @NotNull(message = ErrorMessage.MEMBER_ID_IS_NULL)
         private final Long memberId;
 
-        private final String imagePath;
+        private final List<PostAttachFileDTO> attachFiles;
 
-        @ConstructorProperties({"postTitle", "postContent", "image"})
-        public PostSaveRequest(String postTitle, String postContent, Long memberId, String imagePath) {
+        @ConstructorProperties({"postTitle", "postContent", "attachFiles"})
+        public PostSaveRequest(String postTitle, String postContent, Long memberId, List<PostAttachFileDTO> attachFiles) {
             this.postTitle = postTitle == null ? null : postTitle.trim();
             this.postContent = postContent;
             this.memberId = memberId;
-            this.imagePath = imagePath;
+            this.attachFiles = attachFiles;
         }
 
-        public Board toEntity(Member member) {
+        public Board toEntity(Member author) {
             return Board.builder()
                     .postTitle(getPostTitle())
                     .postContent(getPostContent())
-                    .member(member)
-                    .imagePath(getImagePath())
+                    .author(author)
                     .build();
-
         }
     }
 
@@ -73,35 +72,31 @@ public class BoardRequestDTO {
     @Getter
     public static class UpdatePostRequest {
 
-        @NotNull(message = "게시물을 수정하려면 게시물 번호를 함께 보내주셔야 합니다.")
+        @NotNull(message = ErrorMessage.MISSING_POST_ID)
         private final Long postId;
 
-        @NotNull(message = "게시물 제목이 반드시 전달되어야 합니다.")
-        @NotEmpty(message = "게시물 제목이 비어 있으면 안됩니다.")
-        @Length(max = 30, message = "게시물 제목은 30 글자를 초과할 수 없습니다.")
+        @NotNull(message = ErrorMessage.POST_TITLE_IS_NULL)
+        @NotEmpty(message = ErrorMessage.POST_TITLE_IS_EMPTY)
+        //@Length(max = 30, message = "게시물 제목은 30 글자를 초과할 수 없습니다.")
         private final String postTitle;
 
-        @NotNull(message = "게시물 내용이 반드시 전달되어야 합니다.")
-        @NotEmpty(message = "게시물 내용이 비어 있으면 안됩니다.")
-        @Length(max = 2000, message = "게시물 내용은 2000 글자를 초과할 수 없습니다.")
+        @NotNull(message = ErrorMessage.POST_CONTENT_IS_NULL)
+        @NotEmpty(message = ErrorMessage.POST_CONTENT_IS_EMPTY)
+        //@Length(max = 2000, message = "게시물 내용은 2000 글자를 초과할 수없습니다.")
         private final String postContent;
 
-        private final String imagePath;
-
-        @ConstructorProperties({"postId", "postTitle", "postContent", "image"})
-        public UpdatePostRequest(Long postId, String postTitle, String postContent, String imagePath) {
+        @ConstructorProperties({"postId", "postTitle", "postContent"})
+        public UpdatePostRequest(Long postId, String postTitle, String postContent) {
             this.postId = postId;
             this.postTitle = postTitle == null ? null : postTitle.trim();
             this.postContent = postContent == null ? null : postContent.trim();
-            this.imagePath = imagePath;
         }
 
         public Board toEntity() {
             return Board.builder()
-                    .postId(getPostId())
-                    .postTitle(getPostTitle())
-                    .postContent(getPostContent())
-                    .imagePath(getImagePath())
+                    .postId(postId)
+                    .postTitle(postTitle)
+                    .postContent(postContent)
                     .build();
         }
     }
@@ -118,16 +113,27 @@ public class BoardRequestDTO {
     @Builder
     @RequiredArgsConstructor
     public static class PostAttachFileDTO {
-        private final Long id;
+        private final String originalFilename;
+        private final String filepath;
         private final String filename;
-        private final Board post;
+        private final AttachFileMediaType fileType;
 
         public PostAttachFile toEntity() {
             return PostAttachFile.builder()
-                    .post(getPost())
-                    .filename(getFilename())
+                    .originalFilename(originalFilename)
+                    .filepath(filepath)
+                    .filename(filename)
+                    .fileType(fileType)
+                    .build();
+        }
+
+        public BoardResponseDTO.UploadPostAttachFile toResponseDTO() {
+            return BoardResponseDTO.UploadPostAttachFile.builder()
+                    .originalFilename(originalFilename)
+                    .filepath(filepath)
+                    .filename(filename)
+                    .fileType(fileType)
                     .build();
         }
     }
-
 }
