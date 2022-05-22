@@ -3,6 +3,7 @@ package ix.solution.consulting.api.board.utils;
 import ix.solution.consulting.api.board.domain.dto.BoardRequestDTO;
 import ix.solution.consulting.api.board.domain.dto.BoardResponseDTO;
 import ix.solution.consulting.api.board.domain.entity.PostAttachFile;
+import ix.solution.consulting.api.board.domain.enums.AttachFileMediaType;
 import ix.solution.consulting.exception.board.BoardCrudErrorCode;
 import ix.solution.consulting.exception.common.BizException;
 import lombok.extern.slf4j.Slf4j;
@@ -46,8 +47,8 @@ public class AttachFileManager {
      * @param attachFiles 업로드된 첨부파일들
      * @return 수정된 첨부파일명 (첨부파일명_날짜(년월일시간분초)_UUID일부분.확장자명)
      */
-    public List<BoardResponseDTO.UploadPostAttachFile> saveUploadFilesToDisk(final List<MultipartFile> attachFiles) {
-        final List<BoardRequestDTO.PostAttachFileDTO> files = renameFile(attachFiles);
+    public List<BoardResponseDTO.UploadPostAttachFile> saveUploadFilesToDisk(final AttachFileMediaType fileType, final List<MultipartFile> attachFiles) {
+        final List<BoardRequestDTO.PostAttachFileDTO> files = renameFile(fileType, attachFiles);
         final List<BoardResponseDTO.UploadPostAttachFile> result = new ArrayList<>();
 
         final File folder = new File(DEFAULT_UPLOAD_DIRECTORY);
@@ -63,7 +64,7 @@ public class AttachFileManager {
         final int attachFileMeasure = attachFiles.size();
         for (int i = 0; i < attachFileMeasure; i++) {
             try {
-                attachFiles.get(i).transferTo(Paths.get(files.get(i).getFilename()));
+                attachFiles.get(i).transferTo(Paths.get(files.get(i).getFilepath() + files.get(i).getFilename()));
             } catch (IOException e) {
                 throw new RuntimeException(e.getMessage());
             }
@@ -94,13 +95,14 @@ public class AttachFileManager {
      * @param attachFiles 업로드된 첨부파일들
      * @return 수정된 첨부파일명
      */
-    private List<BoardRequestDTO.PostAttachFileDTO> renameFile(List<MultipartFile> attachFiles) {
+    private List<BoardRequestDTO.PostAttachFileDTO> renameFile(AttachFileMediaType fileType, List<MultipartFile> attachFiles) {
         final List<BoardRequestDTO.PostAttachFileDTO> files = new ArrayList<>();
 
         final LocalDateTime now = LocalDateTime.now();
         final String randomString = UUID.randomUUID().toString().split("-")[0];
 
         attachFiles.forEach(file -> files.add(BoardRequestDTO.PostAttachFileDTO.builder()
+                    .fileType(fileType)
                     .originalFilename(file.getOriginalFilename())
                     .filepath(DEFAULT_UPLOAD_DIRECTORY)
                     .filename(

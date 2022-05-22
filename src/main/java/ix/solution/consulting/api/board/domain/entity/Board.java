@@ -28,7 +28,7 @@ public class Board {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "post_id")
-    private Long id;
+    private Long postId;
 
     private String postTitle;
 
@@ -48,15 +48,15 @@ public class Board {
     @JoinColumn(name = "member_id")
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     @ToString.Exclude
-    private Member author;
+    private Member member;
 
     @Builder
     public Board(Long postId, String postTitle, String postContent, List<PostAttachFile> attachFilesPath, List<Comment> comments, Member author) {
-        this.id = postId;
+        this.postId = postId;
         this.postTitle = postTitle;
         this.postContent = postContent;
         this.attachFilesPath = attachFilesPath;
-        this.author = author;
+        this.member = author;
         this.comments = comments;
         this.blocked = false;
     }

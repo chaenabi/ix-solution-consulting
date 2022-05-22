@@ -43,7 +43,7 @@ public class BoardRequestDTO {
 
         private final List<PostAttachFileDTO> attachFiles;
 
-        @ConstructorProperties({"postTitle", "postContent", "attachFiles"})
+        @ConstructorProperties({"postTitle", "postContent", "memberId", "attachFiles"})
         public PostSaveRequest(String postTitle, String postContent, Long memberId, List<PostAttachFileDTO> attachFiles) {
             this.postTitle = postTitle == null ? null : postTitle.trim();
             this.postContent = postContent;

@@ -4,6 +4,8 @@ import ix.solution.consulting.api.board.domain.entity.PostAttachFile;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
+
 /**
  * 게시물 첨부파일 레포지토리
  *
@@ -14,5 +16,5 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public interface PostAttachFileRepository extends JpaRepository<PostAttachFile, Long>, PostAttachFileQueryDSLRepository {
-    PostAttachFile findByFilename(String filename);
+    Optional<PostAttachFile> findByFilename(String filename);
 }

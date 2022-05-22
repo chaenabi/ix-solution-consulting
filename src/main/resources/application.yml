@@ -21,5 +21,9 @@ spring:
   h2:
     console:
       enabled: true
+  servlet:
+    multipart:
+      max-file-size: 1GB
+      max-request-size: 1GB
 
 upload-directory: src/main/resources/upload/

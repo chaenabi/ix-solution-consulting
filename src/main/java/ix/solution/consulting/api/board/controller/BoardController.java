@@ -2,6 +2,7 @@ package ix.solution.consulting.api.board.controller;
 
 import ix.solution.consulting.api.board.domain.dto.BoardRequestDTO;
 import ix.solution.consulting.api.board.domain.dto.BoardResponseDTO;
+import ix.solution.consulting.api.board.domain.enums.AttachFileMediaType;
 import ix.solution.consulting.api.board.domain.enums.BoardMessage;
 import ix.solution.consulting.api.board.service.BoardService;
 import ix.solution.consulting.api.common.ResponseDTO;
@@ -11,6 +12,8 @@ import ix.solution.consulting.exception.common.BizException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.util.ObjectUtils;
+import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -48,13 +51,14 @@ public class BoardController {
     }
 
     @PostMapping("/posts/attachFiles")
-    public ResponseDTO<List<BoardResponseDTO.UploadPostAttachFile>> uploadMediaFiles(List<MultipartFile> attachFiles) {
+    public ResponseDTO<List<BoardResponseDTO.UploadPostAttachFile>> uploadMediaFiles(AttachFileMediaType fileType, List<MultipartFile> attachFiles) {
         if (attachFiles.isEmpty()) throw new BizException(BoardCrudErrorCode.POST_MEDIA_NOT_CONTAINS);
-        return new ResponseDTO<>(boardService.uploadMediaFiles(attachFiles), BoardMessage.SAVE_ATTACH_FILE_SUCCESS, HttpStatus.OK);
+        return new ResponseDTO<>(boardService.uploadMediaFiles(fileType, attachFiles), BoardMessage.SAVE_ATTACH_FILE_SUCCESS, HttpStatus.OK);
     }
 
     @DeleteMapping("/posts/attachFiles")
-    public ResponseDTO<Void> removeMediaFiles(String attachFiles) {
+    public ResponseDTO<Void> removeMediaFiles(@RequestParam String attachFiles) {
+        if (!StringUtils.hasText(attachFiles)) throw new BizException(BoardCrudErrorCode.MISSING_ATTACH_FILE_NAME);
         boardService.deleteMediaFiles(attachFiles);
         return new ResponseDTO<>(BoardMessage.REMOVE_ATTACH_FILE_SUCCESS, HttpStatus.OK);
     }

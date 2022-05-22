@@ -4,6 +4,7 @@ import ix.solution.consulting.api.board.domain.dto.BoardRequestDTO;
 import ix.solution.consulting.api.board.domain.dto.BoardResponseDTO;
 import ix.solution.consulting.api.board.domain.entity.Board;
 import ix.solution.consulting.api.board.domain.entity.PostAttachFile;
+import ix.solution.consulting.api.board.domain.enums.AttachFileMediaType;
 import ix.solution.consulting.api.board.repository.BoardRepository;
 import ix.solution.consulting.api.board.repository.PostAttachFileRepository;
 import ix.solution.consulting.api.board.utils.AttachFileManager;
@@ -62,9 +63,10 @@ public class BoardService {
             }
         }
 
-        return post.getId();
+        return post.getPostId();
     }
 
+    // TODO: 댓글 포함 전달 (첨부파일은 text 이므로 상관없음)
     @Transactional(readOnly = true, rollbackFor = RuntimeException.class)
     public BoardResponseDTO.PostOne findOnePost(Long postId) {
         Board post = postRepository.findById(postId)
@@ -74,17 +76,12 @@ public class BoardService {
 
     @Transactional(readOnly = true, rollbackFor = RuntimeException.class)
     public BoardResponseDTO.PageResponse findPostsPage(int page) {
-        if ((page = page - 1) < 0) {
-            throw new BizException(BoardCrudErrorCode.PAGE_NOT_FOUND);
-        }
+        if ((page = page - 1) < 0) throw new BizException(BoardCrudErrorCode.PAGE_NOT_FOUND);
 
         Pageable pageable = PageRequest.of(page, pagingSize, Sort.by(Sort.Direction.DESC, "postId"));
         BoardResponseDTO.PageResponse pageResponseDTO = new BoardResponseDTO.PageResponse(page, postRepository.findAllUnblockedPosts(pageable));
 
-        if (pageResponseDTO.getTotalPages() < (page + 1)) {
-            throw new BizException(BoardCrudErrorCode.PAGE_NOT_FOUND);
-        }
-
+        if (pageResponseDTO.getTotalPages() < (page + 1)) throw new BizException(BoardCrudErrorCode.PAGE_NOT_FOUND);
         return pageResponseDTO;
     }
 
@@ -102,12 +99,13 @@ public class BoardService {
         return LocalDateTime.now();
     }
 
-    public List<BoardResponseDTO.UploadPostAttachFile> uploadMediaFiles(List<MultipartFile> attachFiles) {
-        return attachFileManager.saveUploadFilesToDisk(attachFiles);
+    public List<BoardResponseDTO.UploadPostAttachFile> uploadMediaFiles(AttachFileMediaType fileType, List<MultipartFile> attachFiles) {
+        return attachFileManager.saveUploadFilesToDisk(fileType, attachFiles);
     }
 
     public void deleteMediaFiles(String attachFile) {
-        PostAttachFile wantToRemove = postAttachFileRepository.findByFilename(attachFile);
+        PostAttachFile wantToRemove = postAttachFileRepository.findByFilename(attachFile)
+                .orElseThrow(() -> new BizException(BoardCrudErrorCode.POST_MEDIA_NOT_CONTAINS));
         postAttachFileRepository.delete(wantToRemove);
         attachFileManager.deleteFilesToDisk(attachFile);
     }

@@ -182,7 +182,7 @@ public class JwtUtil {
                     .build();
             verifier.verify(accessToken);
         } catch (TokenExpiredException expired) {
-            log.error("리프레시 토큰이 만료되었습니다. 재로그인이 요구됩니다.");
+            log.error("액세스 토큰이 만료되었습니다. 재로그인이 요구됩니다.");
             throw new BizException(MemberCrudErrorCode.ACCESS_TOKEN_EXPIRED);
         } catch (JWTVerificationException failedVerification) {
             log.error("액세스 토큰 검증에 실패했습니다. 유효하지 않은 액세스 토큰입니다.");

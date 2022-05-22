@@ -30,7 +30,7 @@ public class PostAttachFileRepositoryImpl implements PostAttachFileQueryDSLRepos
         queryFactory = new JPAQueryFactory(entityManager);
         final QPostAttachFile qAttachFile = QPostAttachFile.postAttachFile;
         return queryFactory.selectFrom(qAttachFile)
-                .where(qAttachFile.post.id.eq(postId))
+                .where(qAttachFile.post.postId.eq(postId))
                 .fetch();
     }
 }

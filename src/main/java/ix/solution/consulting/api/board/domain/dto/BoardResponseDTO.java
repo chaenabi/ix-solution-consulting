@@ -22,10 +22,10 @@ public class BoardResponseDTO {
         private final List<PostAttachFile> imagePath;
 
         public PostOne(Board board) {
-            this.postId = board.getId();
+            this.postId = board.getPostId();
             this.postTitle = board.getPostTitle();
             this.postContent = board.getPostContent();
-            this.nickname = board.getAuthor().getNickname();
+            this.nickname = board.getMember().getNickname();
             this.imagePath = board.getAttachFilesPath();
         }
     }
