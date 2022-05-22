@@ -1,10 +1,63 @@
 package ix.solution.consulting.api.board.controller;
 
-import org.springframework.web.bind.annotation.RestController;
+import ix.solution.consulting.api.board.domain.dto.BoardRequestDTO;
+import ix.solution.consulting.api.board.domain.dto.BoardResponseDTO;
+import ix.solution.consulting.api.board.domain.enums.BoardMessage;
+import ix.solution.consulting.api.board.service.BoardService;
+import ix.solution.consulting.api.common.ResponseDTO;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
+import org.springframework.validation.Validator;
+import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
+
+/**
+ * 게시물과 관련된 작업 요청을 처리하는 컨트롤러
+ *
+ * @author MC Lee
+ * @created 2022-05-22
+ * @since 2.6.7 spring boot
+ * @since 0.0.1 dev
+ */
+@Slf4j
+@RequiredArgsConstructor
 @RestController
 public class BoardController {
 
+    private final BoardService boardService;
 
+    private final Validator validator;
 
+    /**
+     * 게시물 저장 요청을 받아 저장 처리후 반환값으로 저장된 게시물의 postId를 반환합니다.
+     *
+     * @param dto 게시물 제목, 게시물 내용, 이미지 주소 (선택사항)
+     * @return 성공적으로 저장된 게시물의 고유 아이디
+     */
+    @PostMapping("/posts")
+    public ResponseDTO<Long> savePost(@RequestBody BoardRequestDTO.PostSaveRequest dto) {
+        return new ResponseDTO<>(boardService.savePost(dto), BoardMessage.SAVE_POST_SUCCESS, HttpStatus.OK);
+    }
+
+    @GetMapping("/posts/{postId}")
+    public ResponseDTO<BoardResponseDTO.PostOne> findOnePost(@PathVariable Long postId) {
+        return new ResponseDTO<>(boardService.findOnePost(postId), BoardMessage.FIND_POST_ONE_SUCCESS, HttpStatus.OK);
+    }
+
+    @GetMapping("/posts")
+    public ResponseDTO<BoardResponseDTO.PageResponse> findPostPage(@RequestParam int page) {
+        return new ResponseDTO<>(boardService.findPostsPage(page), BoardMessage.FIND_POST_PAGE_SUCCESS, HttpStatus.OK);
+    }
+
+    @PatchMapping("/posts")
+    public ResponseDTO<BoardResponseDTO.PatchPost> updateOnePost(@RequestBody BoardRequestDTO.PostPatchRequest dto) {
+        return new ResponseDTO<>(boardService.updateOnePost(dto), BoardMessage.UPDATE_POST_SUCCESS, HttpStatus.OK);
+    }
+
+    @DeleteMapping("/posts/{postId}")
+    public ResponseDTO<LocalDateTime> deleteOnePost(@PathVariable Long postId) {
+        return new ResponseDTO<>(boardService.deleteOnePost(postId), BoardMessage.DELETE_POST_SUCCESS, HttpStatus.OK);
+    }
 }

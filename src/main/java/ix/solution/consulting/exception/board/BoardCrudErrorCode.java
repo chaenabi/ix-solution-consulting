@@ -24,12 +24,13 @@ import static org.springframework.http.HttpStatus.NOT_FOUND;
 public enum BoardCrudErrorCode implements ErrorCode {
 
     BOARD_CRUD_FAIL(BAD_REQUEST, -999, ErrorMessage.BOARD_CRUD_FAIL),
-    BOARD_ID_IS_NULL(BAD_REQUEST, -1, ErrorMessage.BOARD_ID_IS_NULL),
-    BOARD_TITLE_IS_NULL(BAD_REQUEST, -2, ErrorMessage.BOARD_TITLE_IS_NULL),
-    BOARD_TITLE_IS_EMPTY(BAD_REQUEST, -3, ErrorMessage.BOARD_TITLE_IS_EMPTY),
-    BOARD_CONTENT_IS_NULL(BAD_REQUEST, -4, ErrorMessage.BOARD_CONTENT_IS_NULL),
-    BOARD_CONTENT_IS_EMPTY(BAD_REQUEST, -5, ErrorMessage.BOARD_CONTENT_IS_EMPTY),
-    BOARD_NOT_FOUND(NOT_FOUND, -6, ErrorMessage.BOARD_NOT_FOUND);
+    POST_ID_IS_NULL(BAD_REQUEST, -1, ErrorMessage.POST_ID_IS_NULL),
+    POST_TITLE_IS_NULL(BAD_REQUEST, -2, ErrorMessage.POST_TITLE_IS_NULL),
+    POST_TITLE_IS_EMPTY(BAD_REQUEST, -3, ErrorMessage.POST_TITLE_IS_EMPTY),
+    POST_CONTENT_IS_NULL(BAD_REQUEST, -4, ErrorMessage.POST_CONTENT_IS_NULL),
+    POST_CONTENT_IS_EMPTY(BAD_REQUEST, -5, ErrorMessage.POST_CONTENT_IS_EMPTY),
+    PAGE_NOT_FOUND(NOT_FOUND, -6, ErrorMessage.PAGE_NOT_FOUND),
+    POST_NOT_FOUND(NOT_FOUND, -7, ErrorMessage.POST_NOT_FOUND);
 
     private final HttpStatus httpStatus;
     private final Integer bizCode;

@@ -11,12 +11,13 @@ package ix.solution.consulting.exception.common;
 public class ErrorMessage {
     // board error
     public static final String BOARD_CRUD_FAIL = "게시물 관련 처리 요청이 실패했습니다.";
-    public static final String BOARD_ID_IS_NULL = "게시물 번호가 반드시 전달되어야 합니다.";
-    public static final String BOARD_TITLE_IS_NULL = "게시물 제목이 반드시 전달되어야 합니다.";
-    public static final String BOARD_TITLE_IS_EMPTY = "게시물 제목이 비어 있으면 안됩니다.";
-    public static final String BOARD_CONTENT_IS_NULL = "게시물 내용이 반드시 전달되어야 합니다.";
-    public static final String BOARD_CONTENT_IS_EMPTY = "게시물 내용이 비어 있으면 안됩니다.";
-    public static final String BOARD_NOT_FOUND = "해당 게시물이 존재하지 않습니다.";
+    public static final String POST_ID_IS_NULL = "게시물 번호가 반드시 전달되어야 합니다.";
+    public static final String POST_TITLE_IS_NULL = "게시물 제목이 반드시 전달되어야 합니다.";
+    public static final String POST_TITLE_IS_EMPTY = "게시물 제목이 비어 있으면 안됩니다.";
+    public static final String POST_CONTENT_IS_NULL = "게시물 내용이 반드시 전달되어야 합니다.";
+    public static final String POST_CONTENT_IS_EMPTY = "게시물 내용이 비어 있으면 안됩니다.";
+    public static final String POST_NOT_FOUND = "해당 게시물이 존재하지 않습니다.";
+    public static final String PAGE_NOT_FOUND = "해당 페이지가 존재하지 않습니다.";
     // end of board error
 
     // member error
