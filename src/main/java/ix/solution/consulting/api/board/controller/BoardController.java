@@ -47,7 +47,7 @@ public class BoardController {
     }
 
     @PatchMapping("/posts")
-    public ResponseDTO<BoardResponseDTO.PatchPost> updateOnePost(@Valid @RequestBody BoardRequestDTO.PostPatchRequest dto, BindingResult result) {
+    public ResponseDTO<BoardResponseDTO.PatchPost> updateOnePost(@Valid @RequestBody BoardRequestDTO.UpdatePostRequest dto, BindingResult result) {
         if (result.hasErrors()) throw new InvalidBoardParameterException(result, BoardCrudErrorCode.BOARD_CRUD_FAIL);
         return new ResponseDTO<>(boardService.updateOnePost(dto), BoardMessage.UPDATE_POST_SUCCESS, HttpStatus.OK);
     }
@@ -61,7 +61,6 @@ public class BoardController {
     public ResponseDTO<BoardResponseDTO.PageResponse> findPostPage(@RequestParam int page) {
         return new ResponseDTO<>(boardService.findPostsPage(page), BoardMessage.FIND_POST_PAGE_SUCCESS, HttpStatus.OK);
     }
-
 
     @DeleteMapping("/posts/{postId}")
     public ResponseDTO<LocalDateTime> deleteOnePost(@PathVariable Long postId) {

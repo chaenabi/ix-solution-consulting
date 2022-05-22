@@ -21,6 +21,11 @@ public class MemberService {
 
     @Transactional(rollbackFor = RuntimeException.class)
     public MemberResponseDTO.Register signUp(MemberRequestDTO.Register register) {
+
+        if (memberRepository.existsByNickname(register.getNickname())) {
+            throw new BizException(MemberCrudErrorCode.MEMBER_NICKNAME_ALREADY_EXISTS);
+        }
+
         register.encodePassword(encoder.encode(register.getPassword()));
         Member savedMember = memberRepository.save(register.toEntity());
         return MemberResponseDTO.Register

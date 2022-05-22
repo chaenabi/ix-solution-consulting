@@ -4,8 +4,11 @@ import ix.solution.consulting.api.board.domain.dto.BoardRequestDTO;
 import ix.solution.consulting.api.board.domain.dto.BoardResponseDTO;
 import ix.solution.consulting.api.board.domain.entity.Board;
 import ix.solution.consulting.api.board.repository.BoardRepository;
+import ix.solution.consulting.api.member.domain.entity.Member;
+import ix.solution.consulting.api.member.repository.MemberRepository;
 import ix.solution.consulting.exception.board.BoardCrudErrorCode;
 import ix.solution.consulting.exception.common.BizException;
+import ix.solution.consulting.exception.member.MemberCrudErrorCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -28,18 +31,23 @@ import java.time.LocalDateTime;
 @Transactional(rollbackFor = RuntimeException.class)
 public class BoardService {
 
+    private final MemberRepository memberRepository;
     private final BoardRepository postRepository;
     int pagingSize = 10;
+
+    public Long savePost(BoardRequestDTO.PostSaveRequest dto) {
+
+        Member member = memberRepository.findById(dto.getMemberId())
+                .orElseThrow(() -> new BizException(MemberCrudErrorCode.MEMBER_NOT_FOUND));
+
+        return postRepository.save(dto.toEntity(member))
+                .getPostId();
+    }
 
     public BoardResponseDTO.PostOne findOnePost(Long postId) {
         Board post = postRepository.findById(postId)
                 .orElseThrow(() -> new BizException(BoardCrudErrorCode.POST_NOT_FOUND));
         return new BoardResponseDTO.PostOne(post);
-    }
-
-    public Long savePost(BoardRequestDTO.PostSaveRequest dto) {
-        return postRepository.save(dto.toEntity())
-                .getPostId();
     }
 
     public BoardResponseDTO.PageResponse findPostsPage(int page) {
@@ -57,7 +65,7 @@ public class BoardService {
         return pageResponseDTO;
     }
 
-    public BoardResponseDTO.PatchPost updateOnePost(BoardRequestDTO.PostPatchRequest dto) {
+    public BoardResponseDTO.PatchPost updateOnePost(BoardRequestDTO.UpdatePostRequest dto) {
         Board post = postRepository.findById(dto.getPostId())
                 .orElseThrow(() -> new BizException(BoardCrudErrorCode.POST_NOT_FOUND));
         return new BoardResponseDTO.PatchPost(post.updatePost(dto.toEntity()));

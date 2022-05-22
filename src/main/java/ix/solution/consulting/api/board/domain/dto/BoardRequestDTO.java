@@ -1,6 +1,7 @@
 package ix.solution.consulting.api.board.domain.dto;
 
 import ix.solution.consulting.api.board.domain.entity.Board;
+import ix.solution.consulting.api.member.domain.entity.Member;
 import ix.solution.consulting.exception.common.ErrorMessage;
 import lombok.Getter;
 import org.hibernate.validator.constraints.Length;
@@ -33,7 +34,7 @@ public class BoardRequestDTO {
         //@Length(max = 2000, message = "게시물 내용은 2000 글자를 초과할 수 없습니다.")
         private final String postContent;
 
-        @NotNull(message = "")
+        @NotNull(message = ErrorMessage.MEMBER_ID_IS_NULL)
         private final Long memberId;
 
         private final String imagePath;
@@ -46,10 +47,11 @@ public class BoardRequestDTO {
             this.imagePath = imagePath;
         }
 
-        public Board toEntity() {
+        public Board toEntity(Member member) {
             return Board.builder()
                     .postTitle(getPostTitle())
                     .postContent(getPostContent())
+                    .member(member)
                     .imagePath(getImagePath())
                     .build();
 
@@ -66,7 +68,7 @@ public class BoardRequestDTO {
      * @since 0.0.1 dev
      */
     @Getter
-    public static class PostPatchRequest {
+    public static class UpdatePostRequest {
 
         @NotNull(message = "게시물을 수정하려면 게시물 번호를 함께 보내주셔야 합니다.")
         private final Long postId;
@@ -84,7 +86,7 @@ public class BoardRequestDTO {
         private final String imagePath;
 
         @ConstructorProperties({"postId", "postTitle", "postContent", "image"})
-        public PostPatchRequest(Long postId, String postTitle, String postContent, String imagePath) {
+        public UpdatePostRequest(Long postId, String postTitle, String postContent, String imagePath) {
             this.postId = postId;
             this.postTitle = postTitle == null ? null : postTitle.trim();
             this.postContent = postContent == null ? null : postContent.trim();
