@@ -1,9 +1,12 @@
 package ix.solution.consulting.api.board.domain.dto;
 
 import ix.solution.consulting.api.board.domain.entity.Board;
+import ix.solution.consulting.api.board.domain.entity.PostAttachFile;
 import ix.solution.consulting.api.member.domain.entity.Member;
 import ix.solution.consulting.exception.common.ErrorMessage;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import org.hibernate.validator.constraints.Length;
 
 import javax.validation.constraints.NotEmpty;
@@ -103,5 +106,28 @@ public class BoardRequestDTO {
         }
     }
 
+    /**
+     * 게시물 첨부파일 DTO
+     *
+     * @author MC Lee
+     * @created 2022-05-22
+     * @since 2.6.7 spring boot
+     * @since 0.0.1 dev
+     */
+    @Getter
+    @Builder
+    @RequiredArgsConstructor
+    public static class PostAttachFileDTO {
+        private final Long id;
+        private final String filename;
+        private final Board post;
+
+        public PostAttachFile toEntity() {
+            return PostAttachFile.builder()
+                    .post(getPost())
+                    .filename(getFilename())
+                    .build();
+        }
+    }
 
 }

@@ -41,7 +41,7 @@ public class BoardService {
                 .orElseThrow(() -> new BizException(MemberCrudErrorCode.MEMBER_NOT_FOUND));
 
         return postRepository.save(dto.toEntity(member))
-                .getPostId();
+                .getId();
     }
 
     public BoardResponseDTO.PostOne findOnePost(Long postId) {

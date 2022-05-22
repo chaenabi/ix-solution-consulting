@@ -8,7 +8,6 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 import javax.persistence.*;
-import java.sql.Blob;
 
 /**
  * 게시물 엔티티
@@ -26,7 +25,8 @@ public class Board {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long postId;
+    @Column(name = "post_id")
+    private Long id;
 
     private String postTitle;
 
@@ -34,6 +34,7 @@ public class Board {
     private String postContent;
 
     private String imagePath;
+    private String videoPath;
 
     @Convert(converter = YNToBooleanConverter.class)
     private Boolean blocked;
@@ -50,7 +51,7 @@ public class Board {
 
     @Builder
     public Board(Long postId, String postTitle, String postContent, String imagePath, Member member) {
-        this.postId = postId;
+        this.id = postId;
         this.postTitle = postTitle;
         this.postContent = postContent;
         this.imagePath = imagePath;
