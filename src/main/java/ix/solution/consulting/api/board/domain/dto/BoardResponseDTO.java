@@ -1,8 +1,10 @@
 package ix.solution.consulting.api.board.domain.dto;
 
+import ix.solution.consulting.api.board.comment.domain.entity.Comment;
 import ix.solution.consulting.api.board.domain.entity.Board;
 import ix.solution.consulting.api.board.domain.entity.PostAttachFile;
 import ix.solution.consulting.api.board.domain.enums.AttachFileMediaType;
+import ix.solution.consulting.api.member.domain.entity.Member;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -18,15 +20,15 @@ public class BoardResponseDTO {
         private final Long postId;
         private final String postTitle;
         private final String postContent;
-        private final String nickname;
-        private final List<PostAttachFile> imagePath;
+        private final Member author;
+        private final List<Comment> comments;
 
         public PostOne(Board board) {
             this.postId = board.getPostId();
             this.postTitle = board.getPostTitle();
             this.postContent = board.getPostContent();
-            this.nickname = board.getMember().getNickname();
-            this.imagePath = board.getAttachFilesPath();
+            this.author = board.getMember();
+            this.comments = board.getComments();
         }
     }
 

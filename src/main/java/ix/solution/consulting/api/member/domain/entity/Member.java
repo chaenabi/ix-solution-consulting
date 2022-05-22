@@ -31,6 +31,7 @@ public class Member {
     @Enumerated(EnumType.STRING)
     private MemberRole role;
 
+    @JsonIgnore
     @CreationTimestamp
     private LocalDateTime registerDate;
 

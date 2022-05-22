@@ -35,8 +35,8 @@ public class Board {
     @Lob
     private String postContent;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "post")
-    private List<PostAttachFile> attachFilesPath;
+    //@OneToMany(fetch = FetchType.LAZY, mappedBy = "post")
+    //private List<PostAttachFile> attachFilesPath;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "post")
     private List<Comment> comments;
@@ -51,11 +51,11 @@ public class Board {
     private Member member;
 
     @Builder
-    public Board(Long postId, String postTitle, String postContent, List<PostAttachFile> attachFilesPath, List<Comment> comments, Member author) {
+    public Board(Long postId, String postTitle, String postContent, List<Comment> comments, Member author) {
         this.postId = postId;
         this.postTitle = postTitle;
         this.postContent = postContent;
-        this.attachFilesPath = attachFilesPath;
+        //this.attachFilesPath = attachFilesPath;
         this.member = author;
         this.comments = comments;
         this.blocked = false;
@@ -64,7 +64,6 @@ public class Board {
     public Board updatePost(Board wantToChange) {
         this.postTitle = wantToChange.getPostTitle();
         this.postContent = wantToChange.getPostContent();
-        this.attachFilesPath = wantToChange.getAttachFilesPath();
         return this;
     }
 
