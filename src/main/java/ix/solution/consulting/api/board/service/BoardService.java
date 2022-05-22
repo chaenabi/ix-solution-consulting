@@ -3,6 +3,7 @@ package ix.solution.consulting.api.board.service;
 import ix.solution.consulting.api.board.domain.dto.BoardRequestDTO;
 import ix.solution.consulting.api.board.domain.dto.BoardResponseDTO;
 import ix.solution.consulting.api.board.domain.entity.Board;
+import ix.solution.consulting.api.board.repository.BoardRepository;
 import ix.solution.consulting.exception.board.BoardCrudErrorCode;
 import ix.solution.consulting.exception.common.BizException;
 import lombok.RequiredArgsConstructor;
@@ -11,7 +12,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ix.solution.consulting.api.board.post.repository.BoardRepository;
 
 import java.time.LocalDateTime;
 

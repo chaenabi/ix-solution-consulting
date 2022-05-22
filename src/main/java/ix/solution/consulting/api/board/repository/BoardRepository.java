@@ -1,4 +1,4 @@
-package ix.solution.consulting.api.board.post.repository;
+package ix.solution.consulting.api.board.repository;
 
 import ix.solution.consulting.api.board.domain.entity.Board;
 import org.springframework.data.domain.Page;
