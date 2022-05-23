@@ -1,5 +1,6 @@
 package ix.solution.consulting.api.board.repository;
 
+import ix.solution.consulting.api.board.domain.entity.Board;
 import ix.solution.consulting.api.board.domain.entity.PostAttachFile;
 import org.springframework.stereotype.Repository;
 
@@ -16,4 +17,5 @@ import java.util.List;
 @Repository
 public interface PostAttachFileQueryDSLRepository {
     List<PostAttachFile> findByPostId(Long postId);
+    void deleteByPostId(Long postId);
 }

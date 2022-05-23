@@ -52,7 +52,7 @@ public class BoardService {
         Board post = postRepository.save(dto.toEntity(member));
 
         for (BoardRequestDTO.PostAttachFileDTO file : dto.getAttachFiles()) {
-            if (attachFileManager.doesFileExist(file.getFilepath() + file.getFilename())) {
+            if (attachFileManager.doesFileExist(file)) {
                 postAttachFileRepository.save(
                         PostAttachFile.builder()
                                 .originalFilename(file.getOriginalFilename())
@@ -86,7 +86,7 @@ public class BoardService {
     }
 
     public BoardResponseDTO.PatchPost updateOnePost(BoardRequestDTO.UpdatePost dto) {
-        Board findPost = postRepository.findById(dto.getPostId())
+        Board findPost = postRepository.findByPostId(dto.getPostId())
                 .orElseThrow(() -> new BizException(BoardCrudErrorCode.POST_NOT_FOUND));
 
         if (!Objects.equals(dto.getMemberId(), findPost.getMember().getId()))
@@ -95,14 +95,23 @@ public class BoardService {
         return new BoardResponseDTO.PatchPost(findPost.updatePost(dto.toEntity()));
     }
 
+    // TODO: 실제 파일 삭제
+    // TODO: post_attach_file 컬럼 데이터 삭제
     public void deleteOnePost(BoardRequestDTO.RemovePost wantToDelete) {
-        Board findPost = postRepository.findById(wantToDelete.getPostId())
+        Board findPost = postRepository.findByPostId(wantToDelete.getPostId())
                 .orElseThrow(() -> new BizException(BoardCrudErrorCode.POST_NOT_FOUND));
 
         if (!Objects.equals(wantToDelete.getMemberId(), findPost.getMember().getId()))
             throw new BizException(BoardCrudErrorCode.POST_AUTHOR_NOT_MATCH);
 
         postRepository.delete(findPost);
+        postRepository.flush();
+        postAttachFileRepository.deleteByPostId(findPost.getPostId());
+        postAttachFileRepository.flush();
+
+        for (String filename : wantToDelete.getAttachFilenames()) {
+            attachFileManager.deleteFilesToDisk(filename);
+        }
     }
 
     public List<BoardResponseDTO.UploadPostAttachFile> uploadMediaFiles(AttachFileMediaType fileType, List<MultipartFile> attachFiles) {

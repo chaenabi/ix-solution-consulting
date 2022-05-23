@@ -11,6 +11,8 @@ spring:
   jpa:
     hibernate:
       ddl-auto: none
+      use-new-id-generator-mappings: false
+
     properties:
       hibernate:
         format_sql: true
@@ -23,7 +25,8 @@ spring:
       enabled: true
   servlet:
     multipart:
-      max-file-size: 1GB
-      max-request-size: 1GB
+      max-file-size: 10GB
+      max-request-size: 10GB
+
 
 upload-directory: src/main/resources/upload/

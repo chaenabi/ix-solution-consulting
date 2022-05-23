@@ -66,6 +66,7 @@ public class MainControllerAdvice {
         // 직접 메시지 커스텀
         ErrorResponseDTO errorResponseDTO = ErrorResponseDTO.builder()
                 .message("필수 항목이 모두 비어있습니다.")
+                .errorCode(HttpStatus.NOT_FOUND.value())
                 .httpStatus(HttpStatus.NOT_FOUND)
                 .build();
         log.error(e.getMessage());

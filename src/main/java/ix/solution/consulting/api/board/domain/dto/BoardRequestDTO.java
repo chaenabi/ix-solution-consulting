@@ -113,10 +113,13 @@ public class BoardRequestDTO {
         @NotNull(message = ErrorMessage.MEMBER_ID_IS_NULL)
         private final Long memberId;
 
-        @ConstructorProperties({"postId", "memberId"})
-        public RemovePost(Long postId, Long memberId) {
+        private final List<String> attachFilenames;
+
+        @ConstructorProperties({"postId", "memberId", "attachFilenames"})
+        public RemovePost(Long postId, Long memberId, List<String> attachFilenames) {
             this.postId = postId;
             this.memberId = memberId;
+            this.attachFilenames = attachFilenames;
         }
     }
 

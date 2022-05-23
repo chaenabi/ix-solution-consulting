@@ -1,1 +1,1 @@
-INSERT INTO member (member_id, name, nickname, password, role, register_date) VALUES ('9999', '관리자명', '관리자별명', '$2a$12$2ggtOMUBemP6Y3o6M.h9QuBFBy6ZXeoTbCYRp1rV6ZbDJZImOzKwG', 'ROLE_ADMIN', now());
+INSERT INTO member (member_id, name, nickname, password, role, register_date) VALUES ('1', '관리자명', '관리자별명', '$2a$12$2ggtOMUBemP6Y3o6M.h9QuBFBy6ZXeoTbCYRp1rV6ZbDJZImOzKwG', 'ROLE_ADMIN', now());

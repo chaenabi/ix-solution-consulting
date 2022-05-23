@@ -1,7 +1,10 @@
 package ix.solution.consulting.api.board.repository;
 
+import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import ix.solution.consulting.api.board.domain.entity.Board;
 import ix.solution.consulting.api.board.domain.entity.PostAttachFile;
+import ix.solution.consulting.api.board.domain.entity.QBoard;
 import ix.solution.consulting.api.board.domain.entity.QPostAttachFile;
 import org.springframework.stereotype.Repository;
 
@@ -32,5 +35,15 @@ public class PostAttachFileRepositoryImpl implements PostAttachFileQueryDSLRepos
         return queryFactory.selectFrom(qAttachFile)
                 .where(qAttachFile.post.postId.eq(postId))
                 .fetch();
+    }
+
+    @Override
+    public void deleteByPostId(Long postId) {
+        queryFactory = new JPAQueryFactory(entityManager);
+        final QPostAttachFile qAttachFile = QPostAttachFile.postAttachFile;
+
+        queryFactory.delete(qAttachFile)
+                .where(qAttachFile.post.postId.eq(postId))
+                .execute();
     }
 }

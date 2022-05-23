@@ -81,9 +81,9 @@ public class AttachFileManager {
         }
     }
 
-    public boolean doesFileExist(String filename) {
-        final File file = new File(filename);
-        return file.exists();
+    public boolean doesFileExist(BoardRequestDTO.PostAttachFileDTO file) {
+        final File findFile = new File(file.getFilepath() + file.getFilename());
+        return findFile.exists();
     }
 
     /**

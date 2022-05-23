@@ -24,6 +24,7 @@ create table comment (
     comment_id bigint auto_increment,
     writer varchar(255),
     content varchar(2000),
+    password varchar(255),
     create_at timestamp,
     update_at timestamp,
     post_id bigint,
@@ -50,11 +51,5 @@ alter table comment
     add constraint FKo9w4gwrw2tah8j742eftgpsoq
         foreign key (post_id)
             references board;
-
-alter table post_attach_file
-    add constraint FKrj5w9rldjb6oeigpv7u8u8sfc
-        foreign key (post_id)
-            references board;
-
 
 

@@ -57,7 +57,8 @@ public class CommentRequestDTO {
 
         @NotNull(message = ErrorMessage.COMMENT_PASSWORD_IS_NULL)
         @NotEmpty(message = ErrorMessage.COMMENT_PASSWORD_IS_EMPTY)
-        private String password;
+        private final String password;
+
     }
 
     @Getter
@@ -69,6 +70,6 @@ public class CommentRequestDTO {
 
         @NotNull(message = ErrorMessage.COMMENT_PASSWORD_IS_NULL)
         @NotEmpty(message = ErrorMessage.COMMENT_PASSWORD_IS_EMPTY)
-        private String password;
+        private final String password;
     }
 }

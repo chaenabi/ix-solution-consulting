@@ -36,7 +36,8 @@ public class Board {
     @Convert(converter = YNToBooleanConverter.class)
     private Boolean blocked;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "post")
+    @JsonIgnoreProperties("post")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "post", cascade = CascadeType.REMOVE)
     private List<Comment> comments;
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST})

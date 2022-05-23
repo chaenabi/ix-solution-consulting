@@ -25,7 +25,7 @@ public class CommentService {
     private final PasswordEncoder encoder;
 
     public void addComment(CommentRequestDTO.AddComment comment) {
-        Board post = boardRepository.findById(comment.getPostId())
+        Board post = boardRepository.findByPostId(comment.getPostId())
                 .orElseThrow(() -> new BizException(BoardCrudErrorCode.POST_NOT_FOUND));
         comment.encodePassword(encoder.encode(comment.getPassword()));
         commentRepository.save(comment.toEntity(post));

@@ -19,7 +19,7 @@ import java.util.Optional;
  * @since 0.0.1 dev
  */
 @Repository
-public interface BoardRepository extends JpaRepository<Board, Long> {
+public interface BoardRepository extends JpaRepository<Board, Long>, BoardQueryDSLRepository {
 
     @Query(value = "SELECT p " +
             "FROM Board p JOIN FETCH p.member m " +
