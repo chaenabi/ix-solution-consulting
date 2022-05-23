@@ -2,7 +2,6 @@ package ix.solution.consulting.api.board.domain.dto;
 
 import ix.solution.consulting.api.board.comment.domain.entity.Comment;
 import ix.solution.consulting.api.board.domain.entity.Board;
-import ix.solution.consulting.api.board.domain.entity.PostAttachFile;
 import ix.solution.consulting.api.board.domain.enums.AttachFileMediaType;
 import ix.solution.consulting.api.member.domain.entity.Member;
 import lombok.Builder;
@@ -20,6 +19,7 @@ public class BoardResponseDTO {
         private final Long postId;
         private final String postTitle;
         private final String postContent;
+        private final String categoryName;
         private final Member author;
         private final List<Comment> comments;
 
@@ -27,6 +27,7 @@ public class BoardResponseDTO {
             this.postId = board.getPostId();
             this.postTitle = board.getPostTitle();
             this.postContent = board.getPostContent();
+            this.categoryName = board.getCategoryName();
             this.author = board.getMember();
             this.comments = board.getComments();
         }
@@ -51,10 +52,12 @@ public class BoardResponseDTO {
     public static class PatchPost {
         private final String postTitle;
         private final String postContent;
+        private final String categoryName;
 
         public PatchPost(Board board) {
             this.postTitle = board.getPostTitle();
             this.postContent = board.getPostContent();
+            this.categoryName = board.getCategoryName();
         }
     }
 

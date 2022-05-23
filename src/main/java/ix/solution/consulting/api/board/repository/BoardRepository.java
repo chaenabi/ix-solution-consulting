@@ -24,9 +24,16 @@ public interface BoardRepository extends JpaRepository<Board, Long>, BoardQueryD
     @Query(value = "SELECT p " +
             "FROM Board p JOIN FETCH p.member m " +
             "WHERE p.blocked = false ",
-            countQuery = "SELECT count(p) FROM Board p WHERE p.blocked = false ")
+            countQuery = "SELECT count(p) FROM Board p WHERE p.blocked = false")
     Page<Board> findAllUnblockedPosts(Pageable pageable);
 
+    @Query(value = "SELECT p " +
+            "FROM Board p JOIN FETCH p.member m " +
+            "WHERE p.blocked = false " +
+            "AND p.categoryName = :categoryName",
+            countQuery = "SELECT count(p) FROM Board p WHERE p.blocked = false AND p.categoryName = :categoryName")
+    Page<Board> findAllPostsMatchedKeyWord(Pageable pageable, @Param("categoryName") String categoryName);
+    
     @Query(value = "SELECT distinct p " +
             "FROM Board p join fetch p.comments m " +
             "join fetch p.member " +

@@ -21,14 +21,8 @@ public class JwtAuthenticationProvider implements AuthenticationProvider {
     private final UserDetailsService userDetailsService;
 
     /**
-     * @param authentication 사용자가 입력한 인증 정보가 담겨있는 파라매터. getName: 아이디, getCredential: 비밀번호.
-     *                       <br> UsernamePasswordAuthenticationFilter 가 이 타입의 (id + password 를 담은) 클래스를 생성 후
-     *                       <br> AuthenticationManager 에게 전달한다.
-     *                       <br> AuthenticationManager 는 AuthenticationProvider 가 authenticate() 를 수행하도록 위임하는데,
-     *                       <br> AuthenticationProvider 는 authenticate() 를 실행하는 도중
-     *                       <br> 인증에 필요한 정보들을 UserDetailsService 에서 꺼내와 비교한다.
-     * @return 인증처리 결과값 (데이터베이스에 저장된--즉 CustomUserDetailsService 의 loadUserByUsername 에서 꺼내온--
-     * <br> 데이터와 유저가 입력한 값이 일치한지 검증한 결과)
+     * @param authentication 인증에 필요한 jwt 정보가 담겨 있습니다.
+     * @return 인증 성공 후, 인가 처리에 사용할 수 있는 객체 반환
      * @throws AuthenticationException 인증처리 실패
      */
     @Override
@@ -36,17 +30,11 @@ public class JwtAuthenticationProvider implements AuthenticationProvider {
 
         JwtUtil jwtUtil = new JwtUtil();
         JwtAuthenticationToken token = (JwtAuthenticationToken) authentication;
+        // 인증
+        jwtUtil.verifyToken(token.getJsonWebToken());
+
         String nickname = jwtUtil.decodePayload(String.valueOf(token.getJsonWebToken()));
-        //jwtUtil.setTokenCreationIngredient(nickname);
-
         UserDetails userDetails = userDetailsService.loadUserByUsername(nickname);
-
-        // TODO: jwt 검증
-        
-
-        // if (userDetails.getSecretKey() == null || !secret.getSecretKey().equals("secret")) {
-        //     throw new InsufficientAuthenticationException("인증하는데 필요한 정보가 불충분합니다.");
-        // }
 
         return new JwtAuthenticationToken(nickname, null, userDetails.getAuthorities());
     }

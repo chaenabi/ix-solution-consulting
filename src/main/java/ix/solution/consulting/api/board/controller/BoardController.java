@@ -86,9 +86,7 @@ public class BoardController {
     }
 
     @GetMapping("/posts")
-    public ResponseDTO<BoardResponseDTO.PageResponse> findPostPage(@RequestParam int page) {
-        return new ResponseDTO<>(boardService.findPostsPage(page), BoardMessage.FIND_POST_PAGE_SUCCESS, HttpStatus.OK);
+    public ResponseDTO<BoardResponseDTO.PageResponse> findPostPage(@RequestParam int page, @RequestParam(required = false) String searchKeyword) {
+        return new ResponseDTO<>(boardService.findPostsPage(page, searchKeyword), BoardMessage.FIND_POST_PAGE_SUCCESS, HttpStatus.OK);
     }
-
-
 }

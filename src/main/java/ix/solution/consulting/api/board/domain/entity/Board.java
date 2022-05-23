@@ -32,6 +32,7 @@ public class Board {
 
     private String postTitle;
     private String postContent;
+    private String categoryName;
 
     @Convert(converter = YNToBooleanConverter.class)
     private Boolean blocked;
@@ -47,11 +48,11 @@ public class Board {
     private Member member;
 
     @Builder
-    public Board(Long postId, String postTitle, String postContent, List<Comment> comments, Member author) {
+    public Board(Long postId, String postTitle, String postContent, String categoryName, List<Comment> comments, Member author) {
         this.postId = postId;
         this.postTitle = postTitle;
         this.postContent = postContent;
-        //this.attachFilesPath = attachFilesPath;
+        this.categoryName = categoryName;
         this.member = author;
         this.comments = comments;
         this.blocked = false;
@@ -60,6 +61,7 @@ public class Board {
     public Board updatePost(Board wantToChange) {
         this.postTitle = wantToChange.getPostTitle();
         this.postContent = wantToChange.getPostContent();
+        this.categoryName = wantToChange.getCategoryName();
         return this;
     }
 

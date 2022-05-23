@@ -16,6 +16,7 @@ create table board (
     blocked varchar(255),
     post_content mediumtext,
     post_title varchar(255),
+    category_name varchar(255),
     member_id bigint,
     primary key (post_id)
 );

@@ -50,7 +50,7 @@ public class JwtUtil {
     /**
      * 회원의 고유 이름으로 액세스 토큰을 생성합니다.
      * 액세스 토큰의 페이로드에 비공개 클레임 memberName 가 포함됩니다.
-     * 유효기간정책 : 6시간
+     * 유효기간정책 : 1일
      *
      * @return 액세스토큰
      * @since 0.0.1
@@ -58,7 +58,7 @@ public class JwtUtil {
     public String createAccessToken() {
         return JWT.create()
                 .withIssuer(ISSUER)
-                .withExpiresAt(Timestamp.valueOf(LocalDateTime.now().plusHours(6).atZone(ZoneId.of("Asia/Seoul")).toLocalDateTime()))
+                .withExpiresAt(Timestamp.valueOf(LocalDateTime.now().plusDays(1).atZone(ZoneId.of("Asia/Seoul")).toLocalDateTime()))
                 .withClaim("memberName", memberName.get())
                 .sign(Algorithm.HMAC256(memberName.get()));
     }
@@ -140,16 +140,15 @@ public class JwtUtil {
      * //@param refreshToken 액세스 토큰이 만료되었을시 전달받게 되는 토큰.
      * //                    액세스 토큰이 만료상태가 아니라면 null 이 되어야 함.
      */
-    public String verifyToken(String accessToken, String refreshToken) {
+    public void verifyToken(String accessToken) {
         if (accessToken == null) throw new BizException(MemberCrudErrorCode.NOT_SIGNED);
         setTokenCreationIngredient(decodePayload(accessToken));
         /*
-        if (!(isValidAccessToken(accessToken))) {
+        if (!(validateAccessToken(accessToken))) {
             return verifyRefreshToken(refreshToken);
         }
          */
-
-        return validateAccessToken(accessToken);
+        validateAccessToken(accessToken);
     }
 
     /**
@@ -172,7 +171,7 @@ public class JwtUtil {
      * @return 토큰 유효기간이 남아있음: true / 토큰 유효기간이 지남: false
      * @since 0.0.1
      */
-    public String validateAccessToken(String accessToken) {
+    public void validateAccessToken(String accessToken) {
         if (ObjectUtils.isEmpty(memberName.get())) throw new BizException(MemberCrudErrorCode.NOT_SIGNED);
 
         try {
@@ -189,7 +188,6 @@ public class JwtUtil {
             log.error("failedVerification: " + failedVerification.getMessage());
             throw new BizException(MemberCrudErrorCode.ACCESS_TOKEN_INVALID);
         }
-        return accessToken;
     }
 
     /**

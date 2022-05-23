@@ -19,6 +19,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
@@ -75,11 +76,17 @@ public class BoardService {
     }
 
     @Transactional(readOnly = true, rollbackFor = RuntimeException.class)
-    public BoardResponseDTO.PageResponse findPostsPage(int page) {
+    public BoardResponseDTO.PageResponse findPostsPage(int page, String searchKeyword) {
         if ((page = page - 1) < 0) throw new BizException(BoardCrudErrorCode.PAGE_NOT_FOUND);
 
         Pageable pageable = PageRequest.of(page, pagingSize, Sort.by(Sort.Direction.DESC, "postId"));
-        BoardResponseDTO.PageResponse pageResponseDTO = new BoardResponseDTO.PageResponse(page, postRepository.findAllUnblockedPosts(pageable));
+        BoardResponseDTO.PageResponse pageResponseDTO;
+
+        if (StringUtils.hasText(searchKeyword)) {
+            pageResponseDTO = new BoardResponseDTO.PageResponse(page, postRepository.findAllPostsMatchedKeyWord(pageable, searchKeyword));
+        } else {
+            pageResponseDTO = new BoardResponseDTO.PageResponse(page, postRepository.findAllUnblockedPosts(pageable));
+        }
 
         if (pageResponseDTO.getTotalPages() < (page + 1)) throw new BizException(BoardCrudErrorCode.PAGE_NOT_FOUND);
         return pageResponseDTO;
@@ -95,8 +102,6 @@ public class BoardService {
         return new BoardResponseDTO.PatchPost(findPost.updatePost(dto.toEntity()));
     }
 
-    // TODO: 실제 파일 삭제
-    // TODO: post_attach_file 컬럼 데이터 삭제
     public void deleteOnePost(BoardRequestDTO.RemovePost wantToDelete) {
         Board findPost = postRepository.findByPostId(wantToDelete.getPostId())
                 .orElseThrow(() -> new BizException(BoardCrudErrorCode.POST_NOT_FOUND));

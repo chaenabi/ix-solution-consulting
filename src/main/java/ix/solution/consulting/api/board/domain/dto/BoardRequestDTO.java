@@ -28,6 +28,10 @@ public class BoardRequestDTO {
     @Getter
     public static class PostSaveRequest {
 
+        @NotNull(message = ErrorMessage.POST_CATEGORY_NAME_IS_NULL)
+        @NotEmpty(message = ErrorMessage.POST_CATEGORY_NAME_IS_EMPTY)
+        private final String categoryName;
+
         @NotNull(message = ErrorMessage.POST_TITLE_IS_NULL)
         @NotEmpty(message = ErrorMessage.POST_TITLE_IS_EMPTY)
         //@Length(max = 30, message = "게시물 제목은 30 글자를 초과할 수 없습니다.")
@@ -43,18 +47,20 @@ public class BoardRequestDTO {
 
         private final List<PostAttachFileDTO> attachFiles;
 
-        @ConstructorProperties({"postTitle", "postContent", "memberId", "attachFiles"})
-        public PostSaveRequest(String postTitle, String postContent, Long memberId, List<PostAttachFileDTO> attachFiles) {
+        @ConstructorProperties({"categoryName", "postTitle", "postContent", "memberId", "attachFiles"})
+        public PostSaveRequest(String categoryName, String postTitle, String postContent, Long memberId, List<PostAttachFileDTO> attachFiles) {
+            this.categoryName = categoryName == null ? null : categoryName.trim();
             this.postTitle = postTitle == null ? null : postTitle.trim();
-            this.postContent = postContent;
+            this.postContent = postContent== null ? null : postContent.trim();
             this.memberId = memberId;
             this.attachFiles = attachFiles;
         }
 
         public Board toEntity(Member author) {
             return Board.builder()
-                    .postTitle(getPostTitle())
-                    .postContent(getPostContent())
+                    .categoryName(categoryName)
+                    .postTitle(postTitle)
+                    .postContent(postContent)
                     .author(author)
                     .build();
         }
@@ -72,6 +78,10 @@ public class BoardRequestDTO {
     @Getter
     public static class UpdatePost {
 
+        @NotNull(message = ErrorMessage.POST_CATEGORY_NAME_IS_NULL)
+        @NotEmpty(message = ErrorMessage.POST_CATEGORY_NAME_IS_EMPTY)
+        private final String categoryName;
+
         @NotNull(message = ErrorMessage.MISSING_POST_ID)
         private final Long postId;
 
@@ -88,10 +98,11 @@ public class BoardRequestDTO {
         //@Length(max = 2000, message = "게시물 내용은 2000 글자를 초과할 수없습니다.")
         private final String postContent;
 
-        @ConstructorProperties({"postId", "memberId", "postTitle", "postContent"})
-        public UpdatePost(Long postId, Long memberId, String postTitle, String postContent) {
+        @ConstructorProperties({"postId", "memberId", "categoryName", "postTitle", "postContent"})
+        public UpdatePost(Long postId, Long memberId, String categoryName, String postTitle, String postContent) {
             this.postId = postId;
             this.memberId = memberId;
+            this.categoryName = categoryName == null ? null : categoryName.trim();
             this.postTitle = postTitle == null ? null : postTitle.trim();
             this.postContent = postContent == null ? null : postContent.trim();
         }
@@ -101,6 +112,7 @@ public class BoardRequestDTO {
                     .postId(postId)
                     .postTitle(postTitle)
                     .postContent(postContent)
+                    .categoryName(categoryName)
                     .build();
         }
     }

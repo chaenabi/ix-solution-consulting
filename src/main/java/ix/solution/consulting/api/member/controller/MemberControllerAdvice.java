@@ -1,6 +1,5 @@
 package ix.solution.consulting.api.member.controller;
 
-import ix.solution.consulting.exception.board.InvalidBoardParameterException;
 import ix.solution.consulting.exception.common.ErrorResponseDTO;
 import ix.solution.consulting.exception.member.InvalidMemberParameterException;
 import org.springframework.http.ResponseEntity;

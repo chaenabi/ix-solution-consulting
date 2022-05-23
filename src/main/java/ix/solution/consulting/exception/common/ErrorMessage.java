@@ -23,6 +23,8 @@ public class ErrorMessage {
     public static final String MISSING_ATTACH_FILE_NAME = "첨부파일명이 제대로 전달되지 못했습니다.";
     public static final String FAIL_TO_DELETE_ATTACH_FILE = "첨부파일 삭제 중 오류가 발생했습니다.";
     public static final String POST_AUTHOR_NOT_MATCH = "작성자 본인만 게시물을 수정 및 삭제할 수 있습니다.";
+    public static final String POST_CATEGORY_NAME_IS_NULL = "게시물 카테고리 정보가 필요합니다.";
+    public static final String POST_CATEGORY_NAME_IS_EMPTY = "게시물 카테고리 정보가 비어 있으면 안됩니다.";
     // end of board error
 
     // member error

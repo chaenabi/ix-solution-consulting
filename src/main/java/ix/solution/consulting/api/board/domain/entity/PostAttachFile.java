@@ -21,7 +21,9 @@ import static javax.persistence.GenerationType.AUTO;
  * @since 0.0.1 dev
  */
 @Entity
-@Getter @Setter @ToString
+@Getter
+@Setter
+@ToString
 public class PostAttachFile {
 
     @Id
@@ -42,7 +44,8 @@ public class PostAttachFile {
     @ToString.Exclude
     private Board post;
 
-    public PostAttachFile() {}
+    public PostAttachFile() {
+    }
 
     @Builder
     public PostAttachFile(Long id, String originalFilename, String filepath, String filename, AttachFileMediaType fileType, Board post) {
