@@ -27,6 +27,9 @@ spring:
     multipart:
       max-file-size: 10GB
       max-request-size: 10GB
+  thymeleaf:
+    cache: false
+    prefix: classpath:/static/
 
 
 upload-directory: src/main/resources/upload/
