@@ -1,5 +1,6 @@
 package ix.solution.consulting.api.member.domain.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import ix.solution.consulting.api.member.domain.enums.MemberRole;
 import lombok.Builder;
 import lombok.Getter;
@@ -24,6 +25,7 @@ public class MemberResponseDTO {
         private final Long id;
         private final String name;
         private final String nickname;
+        @JsonIgnore
         private final String accessToken;
     }
 

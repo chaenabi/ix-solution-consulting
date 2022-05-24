@@ -10,11 +10,15 @@ import ix.solution.consulting.exception.member.InvalidMemberParameterException;
 import ix.solution.consulting.exception.member.MemberCrudErrorCode;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
 @Slf4j
@@ -32,9 +36,13 @@ public class MemberController {
         return new ResponseDTO<>(memberService.signUp(register), MemberMessage.SUCCESS_MEMBER_REGISTER, HttpStatus.OK);
     }
 
-    @GetMapping("/auth/login")
-    public ResponseDTO<MemberResponseDTO.SignIn> signIn(@Valid @RequestBody MemberRequestDTO.SignIn signIn, BindingResult result) {
+    @PostMapping("/auth/login")
+    public ResponseEntity<MemberResponseDTO.SignIn> signIn(@Valid @RequestBody MemberRequestDTO.SignIn signIn, BindingResult result, HttpServletResponse response) {
         if (result.hasErrors()) throw new InvalidMemberParameterException(result, MemberCrudErrorCode.MEMBER_CRUD_FAIL);
-        return new ResponseDTO<>(memberService.signIn(signIn), MemberMessage.SUCCESS_MEMBER_SIGNIN, HttpStatus.OK);
+        MemberResponseDTO.SignIn loginSuccess = memberService.signIn(signIn);
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Set-Cookie","accessToken=" + loginSuccess.getAccessToken() + "; Max-Age=604800; Path=/; Secure; HttpOnly");
+
+        return ResponseEntity.ok().headers(headers).body(loginSuccess);
     }
 }

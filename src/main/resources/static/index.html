@@ -4,12 +4,13 @@
 	<script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
 	<script>
 		$(function () {
-			$("#headerHTML").load("header.html");
+			$("#importFiles").load("headFiles.html");
 		})
 	</script>
+	<script src="js/login.js"></script>
 </head>
 <body class="host_version">
-	<div id="headerHTML"></div>
+	<div id="importFiles"></div>
 	<!-- Modal -->
 	<div class="modal fade" id="login" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
 	  <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
@@ -40,7 +41,7 @@
 							</div>
 							<div class="row">
 								<div class="col-sm-10">
-									<button type="submit" onsubmit="handleSignIn(e)" class="btn btn-light btn-radius btn-brd grd1">
+									<button type="button" onclick="handleSignIn()" class="btn btn-light btn-radius btn-brd grd1">
 										Submit
 									</button>
 									<!-- <a class="for-pwd" href="javascript:;">Forgot your password?</a> -->
@@ -70,7 +71,7 @@
 									<input class="form-control" id="register-password" placeholder="Password" type="password">
 								</div>
 							</div>
-							<div class="row">							
+							<div class="row">
 								<div class="col-sm-10">
 									<button type="button" class="btn btn-light btn-radius btn-brd grd1">
 										Save &amp; Continue
