@@ -15,9 +15,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
@@ -41,7 +43,8 @@ public class MemberController {
         if (result.hasErrors()) throw new InvalidMemberParameterException(result, MemberCrudErrorCode.MEMBER_CRUD_FAIL);
         MemberResponseDTO.SignIn loginSuccess = memberService.signIn(signIn);
         HttpHeaders headers = new HttpHeaders();
-        headers.add("Set-Cookie","accessToken=" + loginSuccess.getAccessToken() + "; Max-Age=604800; Path=/; Secure; HttpOnly");
+        // TODO: fatal. Secure 및 HttpOnly 속성을 사용하여 쿠키를 설정하고 프록시 서버를 통해 Authorization 및 Bearer 제어가 필요
+        headers.add("accesstoken", loginSuccess.getAccessToken());// Max-Age=604800; Path=/; Secure; HttpOnly
 
         return ResponseEntity.ok().headers(headers).body(loginSuccess);
     }
