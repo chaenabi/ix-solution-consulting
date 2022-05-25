@@ -1,10 +1,17 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ko">
 <head>
+	<meta charset="UTF-8">
 	<script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
 	<script>
 		$(function () {
 			$("#importFiles").load("headFiles.html");
+		})
+		window.addEventListener('load', () => {
+			if (localStorage.getItem('accesstoken') !== null) {
+				let loggedIn = document.querySelector('#loggedIn')
+				loggedIn.innerHTML = localStorage.getItem('accountId') + "님이 로그인 중"
+			}
 		})
 	</script>
 	<script src="js/login.js"></script>
@@ -41,9 +48,10 @@
 							</div>
 							<div class="row">
 								<div class="col-sm-10">
-									<button type="button" onclick="handleSignIn()" class="btn btn-light btn-radius btn-brd grd1">
+									<button type="button" onclick="handleSignIn()" id="btn-signIn" class="btn btn-light btn-radius btn-brd grd1">
 										Submit
 									</button>
+									<a id="failMessage" style="font-weight:bold; color: red"></a>
 									<!-- <a class="for-pwd" href="javascript:;">Forgot your password?</a> -->
 								</div>
 							</div>
@@ -104,6 +112,7 @@
 			<div class="container-fluid">
 				<a class="navbar-brand" href="index.html">
 					<img src="images/logo.png" alt="" />
+					<a id="loggedIn" style="color: white"></a>
 				</a>
 				<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbars-host" aria-controls="navbars-rs-food" aria-expanded="false" aria-label="Toggle navigation">
 					<span class="icon-bar"></span>
