@@ -33,7 +33,6 @@ spring:
       max-file-size: 10GB
       max-request-size: 10GB
   thymeleaf:
-    cache: false
     prefix: classpath:/static/
 
   devtools:
