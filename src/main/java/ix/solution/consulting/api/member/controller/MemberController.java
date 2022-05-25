@@ -43,7 +43,7 @@ public class MemberController {
         if (result.hasErrors()) throw new InvalidMemberParameterException(result, MemberCrudErrorCode.MEMBER_CRUD_FAIL);
         MemberResponseDTO.SignIn loginSuccess = memberService.signIn(signIn);
         HttpHeaders headers = new HttpHeaders();
-        // TODO: fatal. Secure 및 HttpOnly 속성을 사용하여 쿠키를 설정하고 프록시 서버를 통해 Authorization 및 Bearer 제어가 필요
+        // TODO: fatal. Secure 및 HttpOnly 속성을 사용하여 쿠키를 설정하고 프록시 서버를 통해 Authorization 및 Bearer 로의 제어가 필요
         headers.add("accesstoken", loginSuccess.getAccessToken());// Max-Age=604800; Path=/; Secure; HttpOnly
 
         return ResponseEntity.ok().headers(headers).body(loginSuccess);
