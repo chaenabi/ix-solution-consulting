@@ -51,8 +51,8 @@ function handleSignIn() {
 
             const accountData = JSON.stringify(obj)
 
-            localStorage.setItem('account', accountData)
-            location.reload()
+            //localStorage.setItem('account', accountData)
+            return accountData
         }
 
     }).catch(err => {

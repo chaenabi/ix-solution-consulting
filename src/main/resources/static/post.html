@@ -19,8 +19,8 @@
     <b>카테고리</b>
     <select id="post-category">
       <option>없음</option>
-      <option>영어교육</option>
       <option>입시컨설팅</option>
+      <option selected>영어교육</option>
       <option>해외유학</option>
     </select>
     <br/>
@@ -69,15 +69,15 @@
         </span>
       </div>
 
-        <div id="editor-container"></div>
-        <button type="submit" onclick="handlePostSubmit()">등록</button>
+        <div id="post-content"></div>
+        <button type="button" onclick="handlePostSubmit()">등록</button>
 
     </div>
   </form>
     <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
 
     <script>
-      let quill = new Quill('#editor-container', {
+      const quill = new Quill('#post-content', {
         modules: {
           formula: true,
           syntax: true,
@@ -86,9 +86,15 @@
         placeholder: '게시물을 작성해주세요.',
         theme: 'snow',
       })
-    </script>
-  <script>
+
     function handlePostSubmit() {
+      let category = document.querySelector('#post-category').value
+      let title = document.querySelector('#post-title').value
+      //let content = quill.container.innerHTML
+
+
+
+
 
     }
   </script>
