@@ -6,6 +6,8 @@ import ix.solution.consulting.api.member.domain.dto.MemberRequestDTO;
 import ix.solution.consulting.api.member.domain.dto.MemberResponseDTO;
 import ix.solution.consulting.api.member.domain.enums.MemberMessage;
 import ix.solution.consulting.api.member.service.MemberService;
+import ix.solution.consulting.config.security.utils.JwtUtil;
+import ix.solution.consulting.exception.common.BizException;
 import ix.solution.consulting.exception.member.InvalidMemberParameterException;
 import ix.solution.consulting.exception.member.MemberCrudErrorCode;
 import lombok.RequiredArgsConstructor;
@@ -14,11 +16,9 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
@@ -43,5 +43,12 @@ public class MemberController {
     public ResponseDTO<MemberResponseDTO.SignIn> signIn(@Valid @RequestBody MemberRequestDTO.SignIn signIn, BindingResult result, HttpServletResponse response) {
         if (result.hasErrors()) throw new InvalidMemberParameterException(result, MemberCrudErrorCode.MEMBER_CRUD_FAIL);
         return new ResponseDTO<>(memberService.signIn(signIn), MemberMessage.SUCCESS_MEMBER_SIGNIN, HttpStatus.OK);
+    }
+
+    // prevent jwt expired when posting
+    @GetMapping("/auth/login")
+    public ResponseDTO<MemberResponseDTO.SignIn> preventJwtExpire(Authentication authentication) {
+        if (!authentication.isAuthenticated()) throw new BizException(MemberCrudErrorCode.NOT_SIGNED);
+        return new ResponseDTO<>(memberService.preventJwtExpire(String.valueOf(authentication.getPrincipal())), MemberMessage.SUCCESS_MEMBER_SIGNIN, HttpStatus.OK);
     }
 }

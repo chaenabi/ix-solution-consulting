@@ -6,9 +6,9 @@
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Document</title>
+    <link rel="icon" href="img/favicon.ico">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet"
           integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
-
 </head>
 <body>
 
@@ -28,7 +28,7 @@
             <tbody>
             <tr>
                 <td>aa</td>
-                <td><a href="#" onclick="fn_view()">bb</a></td>
+                <td><a href="#" onclick="">bb</a></td>
                 <td>cc</td>
                 <td>dd</td>
                 <td>ee</td>
@@ -56,24 +56,14 @@
         </table>
 
         <div>
-            <a href='post.html' onclick='fn_write()' class="btn btn-success">글쓰기</a>
+            <a href='#' onclick='fn_write()' class="btn btn-success">글쓰기</a>
         </div>
     </form>
 </div>
-<script>
-
-    //글조회
-    function fn_write(code) {
-        if (!getSignInData()) {
-            alert('글쓰기 권한이 없습니다.');
-            return false;
-        }
-        return true;
-    }
-
-</script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-pprn3073KE6tl6bjs2QrFaJGz5/SUsLqktiwsUTF55Jfv3qYSDhgCecCxMW52nD2"
         crossorigin="anonymous"></script>
+<script src="js/login.js"></script>
+<script src="js/board.js"></script>
 </body>
 </html>

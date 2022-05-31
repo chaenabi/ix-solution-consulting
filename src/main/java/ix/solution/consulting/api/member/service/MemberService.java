@@ -56,4 +56,20 @@ public class MemberService {
                 .accessToken(jwtUtil.createAccessToken())
                 .build();
     }
+
+    @Transactional(readOnly = true)
+    public MemberResponseDTO.SignIn preventJwtExpire(String nickname) {
+        Member member = memberRepository.findByNickname(nickname)
+                .orElseThrow(() -> new BizException(MemberCrudErrorCode.MEMBER_NOT_FOUND));
+
+        JwtUtil jwtUtil = new JwtUtil();
+        jwtUtil.setTokenCreationIngredient(member.getNickname());
+
+        return MemberResponseDTO.SignIn.builder()
+                .id(member.getId())
+                .name(member.getName())
+                .nickname(member.getNickname())
+                .accessToken(jwtUtil.createAccessToken())
+                .build();
+    }
 }
