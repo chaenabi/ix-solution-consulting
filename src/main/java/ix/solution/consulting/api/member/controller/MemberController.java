@@ -40,15 +40,8 @@ public class MemberController {
     }
 
     @PostMapping("/auth/login")
-    public ResponseEntity<MemberResponseDTO.SignIn> signIn(@Valid @RequestBody MemberRequestDTO.SignIn signIn, BindingResult result, HttpServletResponse response) {
+    public ResponseDTO<MemberResponseDTO.SignIn> signIn(@Valid @RequestBody MemberRequestDTO.SignIn signIn, BindingResult result, HttpServletResponse response) {
         if (result.hasErrors()) throw new InvalidMemberParameterException(result, MemberCrudErrorCode.MEMBER_CRUD_FAIL);
-        MemberResponseDTO.SignIn loginSuccess = memberService.signIn(signIn);
-        Cookie cookie = new Cookie("accessToken", loginSuccess.getAccessToken());
-        cookie.setHttpOnly(true);
-        cookie.setMaxAge(604800);
-
-        response.addCookie(cookie);
-
-        return ResponseEntity.ok().body(loginSuccess);
+        return new ResponseDTO<>(memberService.signIn(signIn), MemberMessage.SUCCESS_MEMBER_SIGNIN, HttpStatus.OK);
     }
 }

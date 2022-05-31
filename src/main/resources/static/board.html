@@ -56,15 +56,19 @@
         </table>
 
         <div>
-            <a href='post.html' onClick='fn_write()' class="btn btn-success">글쓰기</a>
+            <a href='post.html' onclick='fn_write()' class="btn btn-success">글쓰기</a>
         </div>
     </form>
 </div>
 <script>
 
     //글조회
-    function fn_view(code) {
-
+    function fn_write(code) {
+        if (!getSignInData()) {
+            alert('글쓰기 권한이 없습니다.');
+            return false;
+        }
+        return true;
     }
 
 </script>

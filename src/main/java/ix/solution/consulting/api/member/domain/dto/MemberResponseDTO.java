@@ -25,7 +25,6 @@ public class MemberResponseDTO {
         private final Long id;
         private final String name;
         private final String nickname;
-        @JsonIgnore
         private final String accessToken;
     }
 

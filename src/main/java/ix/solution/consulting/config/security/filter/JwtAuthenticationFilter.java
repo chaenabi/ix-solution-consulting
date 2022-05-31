@@ -15,12 +15,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
-    //private static final String AUTHORIZATION_HEADER = "Authorization";
-    //private static final String BEARER_PREFIX = "Bearer ";
-    private static final String ACCESS_TOKEN = "accessToken";
+    private static final String AUTHORIZATION_HEADER = "Authorization";
+    private static final String BEARER_PREFIX = "Bearer ";
 
     private final AuthenticationManager authenticationManager;
 
@@ -28,49 +26,37 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         this.authenticationManager = authenticationManager;
     }
 
-    // jwt가 있냐? 있으면 검증하고 인증객체에 정보를 담아라.
     @Override
     public void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        String token = getAccessToken(request.getCookies());
-        if (StringUtils.hasText(token)) {
-            authenticate(token);
+        String jwt = resolveToken(request);
+
+        if (StringUtils.hasText(jwt)) {
+            try {
+                Authentication jwtAuthenticationToken = new JwtAuthenticationToken(jwt);
+                Authentication authentication = authenticationManager.authenticate(jwtAuthenticationToken);
+                SecurityContextHolder.getContext().setAuthentication(authentication);
+            } catch (AuthenticationException authenticationException) {
+                SecurityContextHolder.clearContext();
+            }
         }
+
         filterChain.doFilter(request, response);
     }
 
-    private String getAccessToken(Cookie[] cookies) {
-        for (Cookie cookie : cookies) {
-            if (ACCESS_TOKEN.equals(cookie.getName())) {
-                return cookie.getValue();
-            }
+    /**
+     * 토큰 문자열 분리
+     *
+     * @param request 요청 객체
+     * @return "Bearer "가 제거된
+     */
+    private String resolveToken(HttpServletRequest request) {
+        String bearerToken = request.getHeader(AUTHORIZATION_HEADER);
+        if (StringUtils.hasText(bearerToken) && bearerToken.startsWith(BEARER_PREFIX)) {
+            return bearerToken.substring(7);
         }
         return null;
     }
 
-    private void authenticate(String token) {
-        try {
-            Authentication jwtAuthenticationToken = new JwtAuthenticationToken(token);
-            Authentication authentication = authenticationManager.authenticate(jwtAuthenticationToken);
-            SecurityContextHolder.getContext().setAuthentication(authentication);
-        } catch (AuthenticationException authenticationException) {
-            SecurityContextHolder.clearContext();
-        }
-    }
-
-//    /**
-//     * 토큰 문자열 분리
-//     *
-//     * @param request 요청 객체
-//     * @return "Bearer "가 제거된 토큰 정보
-//     * @notuse
-//     */
-//    private String resolveToken(HttpServletRequest request) {
-//        String bearerToken = request.getHeader(AUTHORIZATION_HEADER);
-//        if (StringUtils.hasText(bearerToken) && bearerToken.startsWith(BEARER_PREFIX)) {
-//            return bearerToken.substring(7);
-//        }
-//        return null;
-//    }
 
 //    /**
 //     * ControllerAdvice 가 필터의 에러를 처리해주지 못하기 때문에,
@@ -81,6 +67,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 //     * @param e BizException
 //     * @notuse
 //     */
+//
 //    private void sendErrorResponse(HttpStatus status, HttpServletResponse response, BizException e) throws IOException {
 //        response.setStatus(status.value());
 //        response.setContentType("application/json");
@@ -92,6 +79,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 //                .build();
 //        response.getWriter().write(responseDTO.toString());
 //    }
+//
 }
 
 

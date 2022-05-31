@@ -24,6 +24,7 @@ import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Base64;
+import java.util.Date;
 import java.util.regex.Pattern;
 
 /**
@@ -60,7 +61,7 @@ public class JwtUtil {
                 .withIssuer(ISSUER)
                 .withExpiresAt(Timestamp.valueOf(LocalDateTime.now().plusDays(1).atZone(ZoneId.of("Asia/Seoul")).toLocalDateTime()))
                 .withClaim("memberName", memberName.get())
-                .sign(Algorithm.HMAC256(memberName.get()));
+                .sign(Algorithm.HMAC256(memberName.get() + ISSUER));
     }
 
     /**
@@ -92,7 +93,7 @@ public class JwtUtil {
         private final long exp;
         private final String memberName;
 
-        @ConstructorProperties({ "iss", "exp", "memberName" })
+        @ConstructorProperties({ "iss", "exp", "memberName", "expire" })
         public AccessTokenPayLoad(String iss, long exp, String memberName) {
             this.iss = iss;
             this.exp = exp;
@@ -175,7 +176,7 @@ public class JwtUtil {
         if (ObjectUtils.isEmpty(memberName.get())) throw new BizException(MemberCrudErrorCode.NOT_SIGNED);
 
         try {
-            JWTVerifier verifier = JWT.require(Algorithm.HMAC256(memberName.get()))
+            JWTVerifier verifier = JWT.require(Algorithm.HMAC256(memberName.get() + ISSUER))
                     .withClaim("memberName", memberName.get())
                     .withIssuer(ISSUER)
                     .build();
