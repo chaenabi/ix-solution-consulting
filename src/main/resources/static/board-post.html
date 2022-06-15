@@ -41,6 +41,12 @@
     <!-- Modernizr JS
 		============================================ -->
     <script src="js/vendor/modernizr-2.8.3.min.js"></script>
+
+    <link
+            href="https://cdn.quilljs.com/1.3.6/quill.snow.css"
+            rel="stylesheet"
+    />
+
   </head>
   <body>
     <!--[if lt IE 8]>
@@ -193,74 +199,68 @@
               </div>
             </div>
             
-            <!-- start of board  -->
-            <form id="boardForm" name="boardForm" method="post">
-              <table class="table table-striped table-hover">
-                  <thead>
-                  <tr>
-                      <th>번호</th>
-                      <th>제목</th>
-                      <th>작성자</th>
-                      <th>댓글수</th>
-                      <th>날짜</th>
-                      <th>조회수</th>
-                  </tr>
-                  </thead>
-                  <tbody>
-                  <tr>
-                      <td>aa</td>
-                      <td><a href="board-detail-no-sidebar.html" onclick="">bb</a></td>
-                      <td>cc</td>
-                      <td>dd</td>
-                      <td>ee</td>
-                      <td>ff</td>
-                  </tr>
-      
-                  <tr>
-                      <td>aa</td>
-                      <td>bb</td>
-                      <td>cc</td>
-                      <td>dd</td>
-                      <td>ee</td>
-                      <td>ff</td>
-                  </tr>
-      
-                  <tr>
-                      <td>aa</td>
-                      <td>bb</td>
-                      <td>cc</td>
-                      <td>dd</td>
-                      <td>ee</td>
-                      <td>ff</td>
-                  </tr>
-                  </tbody>
-              </table>
-      
-              <div>
-                  <a href='#' onclick='fn_write()' class="btn btn-success">글쓰기</a>
+            <!-- start of board-post  -->
+            <form>
+              <b>카테고리</b>
+              <select id="post-category">
+                  <option>없음</option>
+                  <option>입시컨설팅</option>
+                  <option selected>영어교육</option>
+                  <option>해외유학</option>
+              </select>
+              <br/>
+              <b>제목</b>
+              <input id="post-title" type="text"/>
+          
+              <div id="standalone-container">
+                  <div id="toolbar-container">
+                  <span class="ql-formats">
+                    <select class="ql-font"></select>
+                    <select class="ql-size"></select>
+                  </span>
+                      <span class="ql-formats">
+                    <button class="ql-bold"></button>
+                    <button class="ql-italic"></button>
+                    <button class="ql-underline"></button>
+                    <button class="ql-strike"></button>
+                  </span>
+                      <span class="ql-formats">
+                    <select class="ql-color"></select>
+                    <select class="ql-background"></select>
+                  </span>
+                      <span class="ql-formats">
+                    <button class="ql-script" value="sub"></button>
+                    <button class="ql-script" value="super"></button>
+                  </span>
+                      <span class="ql-formats">
+                    <button class="ql-header" value="1"></button>
+                    <button class="ql-header" value="2"></button>
+                    <button class="ql-blockquote"></button>
+                  </span>
+                      <span class="ql-formats">
+                    <button class="ql-list" value="ordered"></button>
+                    <button class="ql-list" value="bullet"></button>
+                    <button class="ql-indent" value="-1"></button>
+                    <button class="ql-indent" value="+1"></button>
+                  </span>
+                      <span class="ql-formats">
+                    <!-- <button class="ql-direction" value="rtl"></button> -->
+                    <select class="ql-align"></select>
+                  </span>
+                      <span class="ql-formats">
+                    <!-- <button class="ql-link"></button> -->
+                    <button class="ql-image"></button>
+                    <button class="ql-video"></button>
+                  </span>
+                  </div>
+          
+                  <div id="post-content"></div>
+                  <button type="button" onclick="handlePostSubmit()">등록</button>
+          
               </div>
-          </form>
+            <!-- end of board-post  -->
 
-            <!-- end of board  -->
-
-            <div class="row">
-              <div class="col-md-12">
-                <div class="pagination-content number">
-                  <ul class="pagination">
-                    <li>
-                      <a href="#"><i class="zmdi zmdi-chevron-left"></i></a>
-                    </li>
-                    <li><a href="#">1</a></li>
-                    <li><a href="#">2</a></li>
-                    <li><a href="#">3</a></li>
-                    <li><a href="#">4</a></li>
-                    <li class="current">
-                      <a href="#"><i class="zmdi zmdi-chevron-right"></i></a>
-                    </li>
-                  </ul>
-                </div>
-              </div>
-            </div>
+            
           </div>
         </div>
         <!--End of Event Area-->
@@ -352,7 +352,9 @@
 		============================================ -->
     <script src="js/main.js"></script>
 
-    <script src="js/login.js"></script>
-    <script src="js/board.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
+<script src="js/login.js"></script>
+<script src="js/post.js"></script>
   </body>
 </html>
