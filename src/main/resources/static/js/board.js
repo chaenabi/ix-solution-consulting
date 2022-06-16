@@ -98,5 +98,5 @@ const onload = () => {
 window.addEventListener('load', onload())
 
 const findOnePost = postId => {
-  window.open(`board-detail.html?postId=${postId}`)
+  window.open(`board-detail.html?postId=${postId}`, '_self')
 }
