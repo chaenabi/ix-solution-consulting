@@ -1,6 +1,8 @@
 package ix.solution.consulting.api.board.comment.domain.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import ix.solution.consulting.api.board.domain.entity.Board;
 import lombok.Builder;
 import lombok.Getter;
@@ -27,15 +29,18 @@ public class Comment {
     @JsonIgnore
     private String password;
 
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     @CreationTimestamp
     private LocalDateTime createAt;
 
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     @UpdateTimestamp
-    private LocalDateTime UpdateAt;
+    private LocalDateTime updateAt;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "post_id")
     @ToString.Exclude
+    @JsonIgnore
     private Board post;
 
     protected Comment() {}

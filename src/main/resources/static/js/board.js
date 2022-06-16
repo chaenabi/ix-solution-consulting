@@ -1,3 +1,5 @@
+let once = true
+
 const fn_write = () => {
   if (!getSignInData()) {
     alert('글쓰기 권한이 없습니다.')
@@ -18,28 +20,25 @@ const getPostList = pageNumber => {
     const selectedPageNumber = result.selectedPageNumber
     const totalPages = result.totalPages
 
-    // push contents in table
+    // 테이블에 게시물 리스트 삽입
     let postListTable = document.querySelector('#postList > tbody')
+    postListTable.innerHTML = ''
 
     for (p of post) {
-      date = new Date(p.createAt).toISOString()
-
       row = postListTable.insertRow()
 
       cell = row.insertCell()
-      cell.width = 10
       cell.style.wordBreak = 'break-all'
       cell.innerHTML = `<td>${p.postId}</td>`
 
       cell = row.insertCell()
-      cell.width = 10
       cell.style.wordBreak = 'break-all'
       cell.innerHTML = `<td>${p.categoryName}</td>`
 
       cell = row.insertCell()
       cell.width = 100
       cell.style.wordBreak = 'break-all'
-      cell.innerHTML = `<td>${p.postTitle}</td>`
+      cell.innerHTML = `<td><a href="#" onclick=findOnePost(${p.postId})>${p.postTitle}</a></td>`
 
       cell = row.insertCell()
       cell.width = 10
@@ -47,9 +46,9 @@ const getPostList = pageNumber => {
       cell.innerHTML = `<td>${p.member?.nickname}</td>`
 
       cell = row.insertCell()
-      cell.width = 40
+      cell.width = 20
       cell.style.wordBreak = 'break-all'
-      cell.innerHTML = `<td>${date.split('T')[0]}</td>`
+      cell.innerHTML = `<td>${p.createAt}</td>`
 
       cell = row.insertCell()
       cell.width = 10
@@ -60,6 +59,12 @@ const getPostList = pageNumber => {
       cell.width = 10
       cell.style.wordBreak = 'break-all'
       cell.innerHTML = `<td>${p.sawCount}</td>`
+    }
+
+    // 페이징 처리
+    if (once) {
+      paging(totalPages, selectedPageNumber)
+      once = false
     }
   })
 }
@@ -74,24 +79,24 @@ const authBtn = () => {
   }
 }
 
-const onload = () => {
-  // 로그인 / 비로그인시 버튼 표시
-  authBtn()
-  getPostList(1)
-  paging(totalPage, selectedPageNumber)
-}
-
-const paging = () => {
-  let paging = document.querySelector('#pagination :first-child')
+const paging = totalPages => {
+  let paging = document.querySelector('#pagination')
 
   for (let i = 1; i <= totalPages; i++) {
-    if (i === selectedPageNumber) {
-      paging.innerHTML += `<li class="current" id="li${i}"><a href="#" onclick="getPostList(${i})">${i}</a></li>`
-    } else {
-      paging.innerHTML += `<li id="li${i}"><a href="#" onclick="getPostList(${i})">${i}</a></li>`
-    }
+    paging.innerHTML += `<li id="li${i}"><a href="#" onclick="getPostList(${i})">${i}</a></li>`
   }
 }
 
+const onload = () => {
+  // 로그인 / 비로그인시 버튼 표시
+  authBtn()
+
+  // 최초 게시물 가져오기 (1페이지)
+  getPostList(1)
+}
+
 window.addEventListener('load', onload())
-window.addEventListener('click', onclick())
+
+const findOnePost = postId => {
+  window.open(`board-detail.html?postId=${postId}`)
+}

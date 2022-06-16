@@ -8,4 +8,5 @@ import java.util.Optional;
 @Repository
 public interface BoardQueryDSLRepository {
     Optional<Board> findByPostId(Long postId);
+    Optional<Board> findOneByPostId(Long postId);
 }

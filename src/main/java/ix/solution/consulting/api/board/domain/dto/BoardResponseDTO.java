@@ -1,5 +1,6 @@
 package ix.solution.consulting.api.board.domain.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import ix.solution.consulting.api.board.comment.domain.entity.Comment;
 import ix.solution.consulting.api.board.domain.entity.Board;
 import ix.solution.consulting.api.board.domain.enums.AttachFileMediaType;
@@ -9,6 +10,7 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 public class BoardResponseDTO {
@@ -21,7 +23,11 @@ public class BoardResponseDTO {
         private final String postContent;
         private final String categoryName;
         private final Member author;
+        @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
+        private final LocalDateTime createAt;
+        private final Long sawCount;
         private final List<Comment> comments;
+        private final int commentSize;
 
         public PostOne(Board board) {
             this.postId = board.getPostId();
@@ -30,6 +36,9 @@ public class BoardResponseDTO {
             this.categoryName = board.getCategoryName();
             this.author = board.getMember();
             this.comments = board.getComments();
+            this.createAt = board.getCreateAt();
+            this.commentSize = board.getComments().size();
+            this.sawCount = board.getSawCount();
         }
     }
 

@@ -1,5 +1,6 @@
 package ix.solution.consulting.api.board.domain.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import ix.solution.consulting.api.board.comment.domain.entity.Comment;
 import ix.solution.consulting.api.member.domain.entity.Member;
@@ -8,6 +9,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -25,6 +27,7 @@ import java.util.List;
 @NoArgsConstructor
 @Entity
 @ToString
+@DynamicUpdate
 public class Board {
 
     @Id
@@ -40,10 +43,11 @@ public class Board {
     @Convert(converter = YNToBooleanConverter.class)
     private Boolean blocked;
 
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     @CreationTimestamp
     private LocalDateTime createAt;
 
-    @JsonIgnoreProperties("post")
+    @JsonIgnoreProperties({"post"})
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "post", cascade = CascadeType.REMOVE)
     private List<Comment> comments;
 
