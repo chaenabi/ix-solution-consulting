@@ -7,8 +7,10 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -33,9 +35,13 @@ public class Board {
     private String postTitle;
     private String postContent;
     private String categoryName;
+    private Long sawCount;
 
     @Convert(converter = YNToBooleanConverter.class)
     private Boolean blocked;
+
+    @CreationTimestamp
+    private LocalDateTime createAt;
 
     @JsonIgnoreProperties("post")
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "post", cascade = CascadeType.REMOVE)
@@ -48,11 +54,12 @@ public class Board {
     private Member member;
 
     @Builder
-    public Board(Long postId, String postTitle, String postContent, String categoryName, List<Comment> comments, Member author) {
+    public Board(Long postId, String postTitle, String postContent, String categoryName, Long sawCount, List<Comment> comments, Member author) {
         this.postId = postId;
         this.postTitle = postTitle;
         this.postContent = postContent;
         this.categoryName = categoryName;
+        this.sawCount = sawCount;
         this.member = author;
         this.comments = comments;
         this.blocked = false;
@@ -63,6 +70,10 @@ public class Board {
         this.postContent = wantToChange.getPostContent();
         this.categoryName = wantToChange.getCategoryName();
         return this;
+    }
+
+    public void increaseSawCount() {
+        this.sawCount += 1;
     }
 
     private static class YNToBooleanConverter implements AttributeConverter<Boolean, String> {
