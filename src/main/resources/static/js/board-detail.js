@@ -1,4 +1,4 @@
-window.addEventListener('load', () => {
+const loadPostOne = () => {
   let urlparam = location.href.split('?')
   let postId = urlparam[1].split('=')[1].replace('#', '')
   const postOne = axios.get(`http://127.0.0.1:8080/v1/posts/${postId}`)
@@ -26,4 +26,24 @@ window.addEventListener('load', () => {
       document.querySelector('#blog-comment').innerHTML = comment.content
     }
   })
-})
+}
+
+window.addEventListener('load', loadPostOne())
+
+const addComment = () => {
+  const body = {
+    postId: 15,
+    content: '새로 쓴 댓글 내용 15',
+    writer: '글쓴이 테스트 15',
+    password: '12345'
+  }
+
+  const result = axios.post(`http://127.0.0.1:8080/v1/comments`, body)
+
+
+  result.then((res) => {
+    console.log(res.data)
+  })
+
+  location.reload()
+}
