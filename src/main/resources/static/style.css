@@ -102,7 +102,7 @@ input {
 textarea {
   resize: vertical;
   background: transparent;
-  border-bottom: 1px solid #707070;
+  border: 1px solid #707070;
   padding: 10px;
   color: #aaaaaa;
   width: 100%;
@@ -114,7 +114,7 @@ textarea {
 textarea:focus {
   background: transparent;
   border-bottom: 1px solid #fff;
-  outline: none;
+  outline-color: #fe6b8b;
 }
 a:focus,
 a:hover {
@@ -3819,6 +3819,28 @@ h4.small-title {
   position: relative;
   margin-top: 50px;
 }
+.update-btn {
+  display: inline-block;
+  height: 45px;
+  background: #fe6b8b;
+  padding: 10px 30px;
+  color: #fff;
+  font-weight: 600;
+  cursor: pointer;
+  text-transform: uppercase;
+  font-size: 14px;
+  position: relative;
+  vertical-align: middle;
+  overflow: hidden;
+  border: 1px solid #fe6b8b;
+  -webkit-transition: 0.3s ease-in-out;
+  transition: 0.3s ease-in-out;
+}
+.update-btn:hover {
+  background: #fff;
+  color: #303030;
+}
+
 .sent-btn {
   display: inline-block;
   height: 45px;

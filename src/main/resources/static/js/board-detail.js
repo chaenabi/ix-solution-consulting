@@ -27,19 +27,20 @@ const loadPostOne = () => {
       <div class="comment">
           <div class="comment-content">
             <div class="comment-content-top">
-               <h6 id="comment-writer${i}"></h6>
-               <span id="comment-createAt${i}"><i class="zmdi zmdi-calendar-check">sad</i></span>
+               <h6 id="comment-writer${comments[i].id}"></h6>
+               <span id="comment-createAt${comments[i].id}"></span>
             </div>
-          <div class="comment-content-bottom" id="blog-comment${i}">
+          <div class="comment-content-bottom" id="blog-comment${comments[i].id}">
           </div>
       </div>
       `
 
-      document.querySelector(`#comment-writer${i}`).innerHTML =
+      document.querySelector(`#comment-writer${comments[i].id}`).innerHTML =
         comments[i].writer
-      document.querySelector(`#comment-createAt${i}`).innerHTML =
-        comments[i].createAt
-      document.querySelector(`#blog-comment${i}`).innerHTML =
+      document.querySelector(`#comment-createAt${comments[i].id}`).innerHTML =
+        comments[i].createAt +
+        `&emsp;<i class="zmdi zmdi-edit" id="comment-edit${comments[i].id}" onclick="prepareEditComment(event); this.onclick=null;"></i>&emsp;<i class="zmdi zmdi-delete" id="comment-delete${i}" onclick="deleteComment(event);"></i>`
+      document.querySelector(`#blog-comment${comments[i].id}`).innerHTML =
         comments[i].content
     }
   })
@@ -84,4 +85,52 @@ const addComment = () => {
     console.log(res.data)
     location.reload()
   })
+}
+
+const prepareEditComment = e => {
+  const getId = e.target.id.replace('comment-edit', '')
+  const commentTag = document.querySelector(`#blog-comment${getId}`)
+  let preComment = commentTag.innerHTML
+  commentTag.innerHTML = `<textarea id='edit-textarea${getId}'>${preComment}</textarea>`
+  commentTag.innerHTML += `<br><br>Password: <input type='password' id="edit-password${getId}" style='width:200px;'/>`
+  commentTag.innerHTML += `<br><br><button class="update-btn" id="edit-btn${getId}" onclick="updateComment(event);">완료</button>`
+  commentTag.innerHTML += `<p id="failMessage" style="color:red; font-weight: bold;"></p>`
+}
+
+const updateComment = e => {
+  const getCommentId = e.target.id.replace('edit-btn', '')
+  const comment = document.querySelector(`#edit-textarea${getCommentId}`).value
+  const password = document.querySelector(`#edit-password${getCommentId}`).value
+
+  console.log(getCommentId, comment, password)
+
+  const body = {
+    commentId: getCommentId,
+    content: comment,
+    password: password,
+  }
+
+  const result = axios.patch(`http://127.0.0.1:8080/v1/comments`, body)
+
+  result
+    .then(res => {
+      console.log(res)
+      location.reload()
+    })
+    .catch(err => {
+      let error = err.response?.data
+      let failSignInMsg = document.querySelector('#failMessage')
+      if (error.code === 400) {
+        failSignInMsg.innerHTML = '본문 및 비밀번호를 입력해주세요.'
+      } else if (error.code === 500) {
+        failSignInMsg.innerHTML =
+          '예기치 못한 문제가 발생했습니다. 잠시 뒤에 다시 시도해주세요.'
+      } else {
+        failSignInMsg.innerHTML = error.message
+      }
+    })
+}
+
+const deleteComment = e => {
+  console.log('remove')
 }
