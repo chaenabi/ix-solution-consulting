@@ -8,6 +8,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.DynamicUpdate;
 
@@ -38,6 +39,7 @@ public class Board {
     private String postTitle;
     private String postContent;
     private String categoryName;
+    @ColumnDefault("0")
     private Long sawCount;
 
     @Convert(converter = YNToBooleanConverter.class)

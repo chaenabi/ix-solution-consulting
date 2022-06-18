@@ -15,6 +15,36 @@ const quill = new Quill('#post-content', {
 function handlePostSubmit() {
   let category = document.querySelector('#post-category').value
   let title = document.querySelector('#post-title').value
+  let content = document.querySelector('#post-content').outerText
+
+  if (title.trim() === '') {
+    alert('제목을 입력해주세요')
+    return
+  }
+
+  if (content.trim() === '') {
+    alert('내용을 입력해주세요')
+    return
+  }
+
+  const account = JSON.parse(localStorage.getItem('account'))
+
+  const body = {
+    categoryName: category,
+    postTitle: title,
+    postContent: content,
+    memberId: account.id,
+  }
+
+  axios
+    .post(`http://127.0.0.1:8080/v1/posts`, body, {
+      headers: {
+        Authorization: `Bearer ${account.accessToken}`,
+      },
+    })
+    .then(res => {
+      location.href = 'board.html'
+    })
 }
 
 function preventTokenExpired() {
@@ -26,9 +56,8 @@ function preventTokenExpired() {
     headers: { Authorization: `Bearer ${parseAccount.accessToken}` },
   }
 
-  const result = axios.get(`http://localhost:8080/v1/auth/login`, auth)
+  const result = axios.get(`http://127.0.0.1:8080/v1/auth/login`, auth)
 
-  console.log(result)
   result.then(res => {
     const data = res.data.data
     const account = {
@@ -41,6 +70,8 @@ function preventTokenExpired() {
   })
 }
 
+const twoHour = 1000 * 60 * 60 * 2
+
 setInterval(() => {
   preventTokenExpired()
-}, 1000 * 60 * 60 * 2)
+}, twoHour)

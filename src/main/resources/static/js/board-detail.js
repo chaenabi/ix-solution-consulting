@@ -16,6 +16,12 @@ const loadPostOne = () => {
       '#content-commentCount'
     ).innerHTML = `<i class="zmdi zmdi-comments"></i> ${result.commentSize}`
 
+    if (JSON.parse(localStorage.getItem('account')).id !== null) {
+      const view = document.querySelector('#single-item-comment-view')
+      //view.innerHTML += `<i class="zmdi zmdi-edit" id="content-edit" onclick="prepareEditComment(event);" onmousehover="" style="cursor: pointer; color: blue"></i>`
+      view.innerHTML += `<i class="zmdi zmdi-delete" id="content-delete${postId}" onclick="deletePost(event)" onmousehover="" style="cursor: pointer; color: red"></i>`
+    }
+
     document.querySelector('#content-title').innerHTML = result.postTitle
     document.querySelector('#blog-content').innerHTML += result.postContent
     document.querySelector('#author').innerHTML += result.author.nickname
@@ -48,6 +54,39 @@ const loadPostOne = () => {
 }
 
 window.addEventListener('load', loadPostOne())
+
+const deletePost = e => {
+  if (confirm('정말로 삭제하시겠습니까? 삭제하면 되돌릴 수 없습니다.')) {
+    const postId = e.target.id.replace('content-delete', '')
+    const account = JSON.parse(localStorage.getItem('account'))
+
+    const memberId = account.id
+
+    const body = {
+      postId: postId,
+      memberId: memberId,
+    }
+
+    axios
+      .post(`http://127.0.0.1:8080/v1/posts/remove`, body, {
+        headers: {
+          Authorization: `Bearer ${account.accessToken}`,
+        },
+      })
+      .then(res => {
+        alert('삭제되었습니다.')
+        location.href = 'board.html'
+      })
+      .catch(err => {
+        let error = err.response?.data
+        if (error.code === 401) {
+          alert(error.message)
+        } else if (error.code === 500) {
+          alert('예기치 못한 문제가 발생했습니다. 잠시 뒤에 다시 시도해주세요.')
+        }
+      })
+  }
+}
 
 const addComment = () => {
   let urlparam = location.href.split('?')

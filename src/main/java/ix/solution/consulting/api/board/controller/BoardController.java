@@ -73,7 +73,7 @@ public class BoardController {
     }
 
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    @DeleteMapping("/posts")
+    @PostMapping("/posts/remove")
     public ResponseDTO<Void> deleteOnePost(@Valid @RequestBody BoardRequestDTO.RemovePost post, BindingResult result) {
         if (result.hasErrors()) throw new InvalidBoardParameterException(result, BoardCrudErrorCode.BOARD_CRUD_FAIL);
         boardService.deleteOnePost(post);

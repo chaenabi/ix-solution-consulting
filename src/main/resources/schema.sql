@@ -18,8 +18,8 @@ create table board (
     post_title varchar(255),
     category_name varchar(255),
     member_id bigint,
-    create_at timestamp default CURRENT_TIMESTAMP(),
-    saw_count bigint default 0,
+    create_at timestamp NOT NULL default CURRENT_TIMESTAMP(),
+    saw_count bigint NOT NULL default 0,
     primary key (post_id)
 );
 

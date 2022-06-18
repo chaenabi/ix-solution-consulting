@@ -198,17 +198,18 @@
             
             <!-- start of board-post  -->
             <form>
-              <b>카테고리</b>
+              <b>카테고리</b>&emsp;
               <select id="post-category">
                   <option>없음</option>
                   <option>입시컨설팅</option>
                   <option selected>영어교육</option>
                   <option>해외유학</option>
               </select>
-              <br/>
+              <br/><br>
               <b>제목</b>
-              <input id="post-title" type="text"/>
-          
+              <input id="post-title" type="text" style="border-bottom: 1px solid #909090; width:400px"/>
+              <br/><br/>
+
               <div id="standalone-container">
                   <div id="toolbar-container">
                   <span class="ql-formats">
@@ -246,13 +247,13 @@
                   </span>
                       <span class="ql-formats">
                     <!-- <button class="ql-link"></button> -->
-                    <button class="ql-image"></button>
-                    <button class="ql-video"></button>
+                    <!-- <button class="ql-image"></button> -->
                   </span>
                   </div>
           
                   <div id="post-content"></div>
-                  <button type="button" onclick="handlePostSubmit()">등록</button>
+                  <br>
+                  <button type="button" class="sent-btn" onclick="handlePostSubmit()">등록</button>
           
               </div>
             <!-- end of board-post  -->

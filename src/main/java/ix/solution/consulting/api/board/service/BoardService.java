@@ -52,18 +52,21 @@ public class BoardService {
 
         Board post = postRepository.save(dto.toEntity(member));
 
-        for (BoardRequestDTO.PostAttachFileDTO file : dto.getAttachFiles()) {
-            if (attachFileManager.doesFileExist(file)) {
-                postAttachFileRepository.save(
-                        PostAttachFile.builder()
-                                .originalFilename(file.getOriginalFilename())
-                                .filepath(file.getFilepath())
-                                .filename(file.getFilename())
-                                .fileType(file.getFileType())
-                                .post(post)
-                         .build());
+        if (dto.getAttachFiles() != null) {
+            for (BoardRequestDTO.PostAttachFileDTO file : dto.getAttachFiles()) {
+                if (attachFileManager.doesFileExist(file)) {
+                    postAttachFileRepository.save(
+                            PostAttachFile.builder()
+                                    .originalFilename(file.getOriginalFilename())
+                                    .filepath(file.getFilepath())
+                                    .filename(file.getFilename())
+                                    .fileType(file.getFileType())
+                                    .post(post)
+                                    .build());
+                }
             }
         }
+
         return post.getPostId();
     }
 
@@ -115,11 +118,14 @@ public class BoardService {
 
         postRepository.delete(findPost);
         postRepository.flush();
-        postAttachFileRepository.deleteByPostId(findPost.getPostId());
-        postAttachFileRepository.flush();
 
-        for (String filename : wantToDelete.getAttachFilenames()) {
-            attachFileManager.deleteFilesToDisk(filename);
+        if (wantToDelete.getAttachFilenames() != null) {
+            postAttachFileRepository.deleteByPostId(findPost.getPostId());
+            postAttachFileRepository.flush();
+
+            for (String filename : wantToDelete.getAttachFilenames()) {
+                attachFileManager.deleteFilesToDisk(filename);
+            }
         }
     }
 

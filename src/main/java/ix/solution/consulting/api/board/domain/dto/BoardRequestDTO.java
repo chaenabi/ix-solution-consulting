@@ -62,6 +62,7 @@ public class BoardRequestDTO {
                     .postTitle(postTitle)
                     .postContent(postContent)
                     .author(author)
+                    .sawCount(0L)
                     .build();
         }
     }

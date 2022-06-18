@@ -33,8 +33,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
 
-
-
     @Bean
     CorsConfigurationSource corsConfigurationSource() {
 
