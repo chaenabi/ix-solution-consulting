@@ -69,7 +69,7 @@ public class BoardService {
 
     @Transactional(rollbackFor = RuntimeException.class)
     public BoardResponseDTO.PostOne findOnePost(Long postId) {
-        Board post = postRepository.findOneByPostId(postId)
+        Board post = postRepository.findByPostId(postId)
                 .orElseThrow(() -> new BizException(BoardCrudErrorCode.POST_NOT_FOUND));
         increaseSawCount(post);
         return new BoardResponseDTO.PostOne(post);

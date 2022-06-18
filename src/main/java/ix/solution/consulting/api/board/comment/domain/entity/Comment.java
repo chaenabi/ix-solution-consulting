@@ -46,11 +46,13 @@ public class Comment {
     protected Comment() {}
 
     @Builder
-    public Comment(Long id, String writer, String content, String password, Board post) {
+    public Comment(Long id, String writer, String content, String password, LocalDateTime createAt, LocalDateTime updateAt, Board post) {
         this.id = id;
         this.writer = writer;
         this.content = content;
         this.password = password;
+        this.createAt = createAt;
+        this.updateAt = updateAt;
         this.post = post;
     }
 

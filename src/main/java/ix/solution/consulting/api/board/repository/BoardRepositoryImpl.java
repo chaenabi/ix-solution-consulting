@@ -22,29 +22,17 @@ public class BoardRepositoryImpl implements BoardQueryDSLRepository {
     public Optional<Board> findByPostId(Long postId) {
         queryFactory = new JPAQueryFactory(entityManager);
         final QBoard qBoard = QBoard.board;
-        return Optional.ofNullable(
-                queryFactory.selectFrom(qBoard)
-                .innerJoin(qBoard.member, QMember.member)
-                .fetchJoin()
-                .where(qBoard.postId.eq(postId))
-                .fetchOne()
-        );
-    }
-
-    @Override
-    public Optional<Board> findOneByPostId(Long postId) {
-        queryFactory = new JPAQueryFactory(entityManager);
-        final QBoard qBoard = QBoard.board;
         final QMember qMember = QMember.member;
         final QComment qComment = QComment.comment;
 
+
         return Optional.ofNullable(
                 queryFactory.selectFrom(qBoard)
-                        .leftJoin(qBoard.comments, qComment)
-                        .leftJoin(qBoard.member, qMember)
-                        .fetchJoin()
-                        .where(qBoard.postId.eq(postId).and(qBoard.blocked.eq(false)))
-                        .fetchOne()
+                .innerJoin(qBoard.member, qMember)
+                .leftJoin(qBoard.comments, qComment)
+                .fetchJoin()
+                .where(qBoard.postId.eq(postId).and(qBoard.blocked.eq(false)))
+                .fetchOne()
         );
     }
 }

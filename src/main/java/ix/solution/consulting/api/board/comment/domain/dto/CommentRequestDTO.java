@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
+import java.time.LocalDateTime;
 
 public class CommentRequestDTO {
 
@@ -40,6 +41,7 @@ public class CommentRequestDTO {
                     .content(content)
                     .password(password)
                     .post(post)
+                    .createAt(LocalDateTime.now())
                     .build();
         }
     }
