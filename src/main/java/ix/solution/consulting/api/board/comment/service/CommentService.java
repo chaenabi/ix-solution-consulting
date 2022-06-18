@@ -42,11 +42,11 @@ public class CommentService {
 
     }
 
-    public void deleteComment(CommentRequestDTO.RemoveComment wantToDelete) {
-        Comment comment = commentRepository.findById(wantToDelete.getCommentId())
+    public void deleteComment(Long commentId, String password) {
+        Comment comment = commentRepository.findById(commentId)
                 .orElseThrow(() -> new BizException(CommentCrudErrorCode.COMMENT_NOT_FOUND));
 
-        if (encoder.matches(wantToDelete.getPassword(), comment.getPassword()))
+        if (encoder.matches(password, comment.getPassword()))
             commentRepository.delete(comment);
         else
             throw new BizException(CommentCrudErrorCode.COMMENT_PASSWORD_NOT_MATCH);

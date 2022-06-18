@@ -12,6 +12,9 @@ spring:
     pathmatch:
       # swagger setting fail solve. fail cause: default matching-strategy has changed ant-path-matcher -> path_pattern_parser
       matching-strategy: ant_path_matcher
+    hiddenmethod:
+      filter:
+        enabled: true
 
   datasource:
     url: jdbc:h2:mem:testdb;MODE=MySQL;DB_CLOSE_DELAY=-1

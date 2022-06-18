@@ -35,10 +35,11 @@ public class CommentController {
         return new ResponseDTO<>(CommentMessage.UPDATE_COMMENT_SUCCESS, HttpStatus.OK);
     }
 
-    @PatchMapping("/comments/remove")
-    public ResponseDTO<Void> removeComment(@Valid @RequestBody CommentRequestDTO.RemoveComment comment, BindingResult result) {
-        if (result.hasErrors()) throw new InvalidCommentParameterException(result, CommentCrudErrorCode.COMMENT_CRUD_FAIL);
-        commentService.deleteComment(comment);
+    //        private final Long commentId;
+    //        private final String password;
+    @DeleteMapping("/comments/remove")
+    public ResponseDTO<Void> removeComment(@RequestParam(value = "commentId") Long commentId, @RequestParam(value = "password") String password) {
+        commentService.deleteComment(commentId, password);
         return new ResponseDTO<>(CommentMessage.DELETE_COMMENT_SUCCESS, HttpStatus.OK);
     }
 

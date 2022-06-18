@@ -39,7 +39,8 @@ const loadPostOne = () => {
         comments[i].writer
       document.querySelector(`#comment-createAt${comments[i].id}`).innerHTML =
         comments[i].createAt +
-        `&emsp;<i class="zmdi zmdi-edit" id="comment-edit${comments[i].id}" onclick="prepareEditComment(event); this.onclick=null;"></i>&emsp;<i class="zmdi zmdi-delete" id="comment-delete${i}" onclick="deleteComment(event);"></i>`
+        `&emsp;<i class="zmdi zmdi-edit" id="comment-edit${comments[i].id}" onclick="prepareEditComment(event);" onmousehover="" style="cursor: pointer; color: blue"></i>
+        &emsp;<i class="zmdi zmdi-delete" id="comment-delete${comments[i].id}" onclick="prepareDeleteComment(event)"; onmousehover="" style="cursor: pointer; color: red"></i>`
       document.querySelector(`#blog-comment${comments[i].id}`).innerHTML =
         comments[i].content
     }
@@ -87,14 +88,21 @@ const addComment = () => {
   })
 }
 
+let preComment = ''
+let createEditOnce = true
+
 const prepareEditComment = e => {
   const getId = e.target.id.replace('comment-edit', '')
   const commentTag = document.querySelector(`#blog-comment${getId}`)
-  let preComment = commentTag.innerHTML
-  commentTag.innerHTML = `<textarea id='edit-textarea${getId}'>${preComment}</textarea>`
-  commentTag.innerHTML += `<br><br>Password: <input type='password' id="edit-password${getId}" style='width:200px;'/>`
-  commentTag.innerHTML += `<br><br><button class="update-btn" id="edit-btn${getId}" onclick="updateComment(event);">완료</button>`
-  commentTag.innerHTML += `<p id="failMessage" style="color:red; font-weight: bold;"></p>`
+  preComment = commentTag.innerHTML
+  if (createEditOnce) {
+    commentTag.innerHTML = ''
+    commentTag.innerHTML = `<textarea id='edit-textarea${getId}'>${preComment}</textarea>`
+    commentTag.innerHTML += `<br><br>Password: <input type='password' id="edit-password${getId}" style='width:200px;'/>`
+    commentTag.innerHTML += `<br><br><button class="update-btn" id="edit-btn${getId}" onclick="updateComment(event);">수정</button>`
+    commentTag.innerHTML += `<p id="failMessage" style="color:red; font-weight: bold;"></p>`
+    createEditOnce = false
+  }
 }
 
 const updateComment = e => {
@@ -131,6 +139,49 @@ const updateComment = e => {
     })
 }
 
+let createRemoveOnce = true
+
+const prepareDeleteComment = e => {
+  const getId = e.target.id.replace('comment-delete', '')
+  const commentTag = document.querySelector(`#blog-comment${getId}`)
+  if (createRemoveOnce) {
+    commentTag.innerHTML += `<br><br>Password: <input type='password' id="edit-password${getId}" style='width:200px;'/>`
+    commentTag.innerHTML += `<br><br><button class="update-btn" id="remove-btn${getId}" onclick="deleteComment(event);">삭제</button>`
+    commentTag.innerHTML += `<p id="failMessage" style="color:red; font-weight: bold;"></p>`
+    createRemoveOnce = false
+  }
+}
+
 const deleteComment = e => {
-  console.log('remove')
+  const getCommentId = e.target.id.replace('remove-btn', '')
+  const password = document.querySelector(`#edit-password${getCommentId}`).value
+
+  console.log(getCommentId, password)
+
+  const params = {
+    commentId: getCommentId,
+    password: password,
+  }
+
+  const result = axios.delete(`http://127.0.0.1:8080/v1/comments/remove`, {
+    params,
+  })
+
+  result
+    .then(res => {
+      console.log(res)
+      location.reload()
+    })
+    .catch(err => {
+      let error = err.response?.data
+      let failSignInMsg = document.querySelector('#failMessage')
+      if (error.code === 400) {
+        failSignInMsg.innerHTML = '본문 및 비밀번호를 입력해주세요.'
+      } else if (error.code === 500) {
+        failSignInMsg.innerHTML =
+          '예기치 못한 문제가 발생했습니다. 잠시 뒤에 다시 시도해주세요.'
+      } else {
+        failSignInMsg.innerHTML = error.message
+      }
+    })
 }

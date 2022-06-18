@@ -62,16 +62,4 @@ public class CommentRequestDTO {
         private final String password;
 
     }
-
-    @Getter
-    @RequiredArgsConstructor
-    public static class RemoveComment {
-
-        @NotNull(message = ErrorMessage.COMMENT_ID_IS_NULL)
-        private final Long commentId;
-
-        @NotNull(message = ErrorMessage.COMMENT_PASSWORD_IS_NULL)
-        @NotEmpty(message = ErrorMessage.COMMENT_PASSWORD_IS_EMPTY)
-        private final String password;
-    }
 }
