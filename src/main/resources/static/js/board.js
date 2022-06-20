@@ -10,7 +10,7 @@ const fn_write = () => {
 }
 
 const getPostList = pageNumber => {
-  const posts = axios.get(`http://127.0.0.1:8080/v1/posts`, {
+  const posts = axios.get(`http://localhost:8080/v1/posts`, {
     params: { page: pageNumber },
   })
 

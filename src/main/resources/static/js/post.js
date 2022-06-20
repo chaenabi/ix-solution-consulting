@@ -37,7 +37,7 @@ function handlePostSubmit() {
   }
 
   axios
-    .post(`http://127.0.0.1:8080/v1/posts`, body, {
+    .post(`http://localhost:8080/v1/posts`, body, {
       headers: {
         Authorization: `Bearer ${account.accessToken}`,
       },
@@ -56,7 +56,7 @@ function preventTokenExpired() {
     headers: { Authorization: `Bearer ${parseAccount.accessToken}` },
   }
 
-  const result = axios.get(`http://127.0.0.1:8080/v1/auth/login`, auth)
+  const result = axios.get(`http://localhost:8080/v1/auth/login`, auth)
 
   result.then(res => {
     const data = res.data.data
