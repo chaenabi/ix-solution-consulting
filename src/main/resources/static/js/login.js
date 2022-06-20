@@ -19,7 +19,7 @@ const handleSignOut = () => {
 const handleSignIn = () => {
   let id = document.querySelector('#login-id').value
   let password = document.querySelector('#login-password').value
-  const result = axios.post(`http://localhost:8080/v1/auth/login`, {
+  const result = axios.post(`http://3.39.207.182:8080/v1/auth/login`, {
     nickname: id,
     password: password,
   })
