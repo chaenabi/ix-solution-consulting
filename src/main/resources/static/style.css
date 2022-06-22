@@ -3031,7 +3031,6 @@ mark {
 }
 .select {
   display: inline-block;
-  float: left;
   margin-right: 10px;
   position: relative;
 }

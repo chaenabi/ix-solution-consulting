@@ -34,7 +34,7 @@ const handleSignIn = () => {
         accessToken: data['accessToken'],
       }
       localStorage.setItem('account', JSON.stringify(account))
-      location.href = '../static/board.html'
+      location.href = '../board.html'
     })
     .catch(err => {
       let error = err.response?.data

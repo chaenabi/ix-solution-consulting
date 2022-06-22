@@ -5,6 +5,7 @@ import ix.solution.consulting.api.common.ResponseDTO;
 import ix.solution.consulting.api.member.domain.dto.MemberRequestDTO;
 import ix.solution.consulting.api.member.domain.dto.MemberResponseDTO;
 import ix.solution.consulting.api.member.domain.enums.MemberMessage;
+import ix.solution.consulting.api.member.service.EmailService;
 import ix.solution.consulting.api.member.service.MemberService;
 import ix.solution.consulting.config.security.utils.JwtUtil;
 import ix.solution.consulting.exception.common.BizException;
@@ -31,6 +32,7 @@ import javax.validation.Valid;
 public class MemberController {
 
     private final MemberService memberService;
+    private final EmailService emailService;
 
     //@PreAuthorize("hasRole('ROLE_ADMIN')")
     @PostMapping("/register")
@@ -50,5 +52,11 @@ public class MemberController {
     public ResponseDTO<MemberResponseDTO.SignIn> preventJwtExpire(Authentication authentication) {
         if (!authentication.isAuthenticated()) throw new BizException(MemberCrudErrorCode.NOT_SIGNED);
         return new ResponseDTO<>(memberService.preventJwtExpire(String.valueOf(authentication.getPrincipal())), MemberMessage.SUCCESS_MEMBER_SIGNIN, HttpStatus.OK);
+    }
+
+    @PostMapping("/mail")
+    public ResponseEntity<String> manageAskEmail(@RequestBody MemberRequestDTO.AskEmail ask) {
+        emailService.sendAsk(ask);
+        return ResponseEntity.ok().body("성공적으로 접수되었습니다.");
     }
 }

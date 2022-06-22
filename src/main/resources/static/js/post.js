@@ -1,7 +1,7 @@
 window.addEventListener('load', () => {
   if (!getSignInData()) {
     alert('글쓰기 권한이 없습니다.')
-    location.href = '../static/board.html'
+    location.href = '../board.html'
   }
 })
 

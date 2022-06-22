@@ -6,6 +6,7 @@ import ix.solution.consulting.api.member.domain.enums.MemberRole;
 import ix.solution.consulting.exception.common.ErrorMessage;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.ToString;
 
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
@@ -53,5 +54,18 @@ public class MemberRequestDTO {
         @NotNull(message = ErrorMessage.MEMBER_PASSWORD_IS_NULL)
         @NotEmpty(message = ErrorMessage.MEMBER_PASSWORD_IS_EMPTY)
         private final String password;
+    }
+
+    @Getter
+    @RequiredArgsConstructor
+    @ToString
+    public static class AskEmail {
+        private final String firstOption;
+        private final String secondOption;
+        private final String name;
+        private final String cellPhone;
+        private final String email;
+        private final String askTitle;
+        private final String askContent;
     }
 }
