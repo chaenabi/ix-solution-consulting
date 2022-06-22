@@ -1766,7 +1766,6 @@ mark {
   left: 0;
   width: 100%;
   height: 100%;
-  background: ;
   background-color: rgba(0, 0, 0, 0.3);
 }
 .single-fun-factor {
@@ -2304,7 +2303,7 @@ mark {
 }
 .single-footer-widget p {
   font-size: 14px;
-  color: ;
+  color: black;
   line-height: 26px;
   font-weight: 400;
   margin-bottom: 0;
@@ -2533,7 +2532,7 @@ mark {
   visibility: visible;
 }
 .vbox-close {
-  background: #ffae27 url('close.gif') no-repeat scroll 10px center !important;
+  /*background: #ffae27 url('close.gif') no-repeat scroll 10px center !important;*/
   color: #fff !important;
   cursor: pointer;
   display: block;
@@ -4416,11 +4415,11 @@ thead {
   margin-bottom: 20px;
   width: 100%;
 }
-.form-messege.success {
+.form-message.success {
   color: #1dbc51;
   font-weight: 700;
 }
-.form-messege.error {
+.form-message.error {
   color: #ff1313;
 }
 .edubuzz-address {

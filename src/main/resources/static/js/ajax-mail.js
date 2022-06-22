@@ -1,10 +1,10 @@
 $(function() {
 
 	// Get the form.
-	var form = $('#contact-form');
+	let form = $('#contact-form');
 
 	// Get the messages div.
-	var formMessages = $('.form-message');
+	let formMessages = $('.form-message');
 
 	// Set up an event listener for the contact form.
 	$(form).submit(function(e) {
@@ -32,6 +32,36 @@ $(function() {
 				alert('세부 상담 종목을 선택해주세요.')
 				return
 			}
+		}
+
+		if (formData[0].value.trim() === '') {
+			$(formMessages).addClass('error');
+			$(formMessages).text('이름을 입력해주세요.');
+			return
+		}
+
+		if (formData[1].value.trim() === '') {
+			$(formMessages).addClass('error');
+			$(formMessages).text('휴대폰 번호를 입력해주세요.');
+			return
+		}
+
+		if (formData[2].value.trim() === '') {
+			$(formMessages).addClass('error');
+			$(formMessages).text('이메일을 입력해주세요.');
+			return
+		}
+
+		if (formData[3].value.trim() === '') {
+			$(formMessages).addClass('error');
+			$(formMessages).text('상담 신청의 제목을 입력해주세요.');
+			return
+		}
+
+		if (formData[4].value.trim() === '') {
+			$(formMessages).addClass('error');
+			$(formMessages).text('상담 신청 내용을 입력해주세요.');
+			return
 		}
 
 		const parse = {
@@ -71,7 +101,7 @@ $(function() {
 			if (data.responseText !== '') {
 				$(formMessages).text(data.responseText);
 			} else {
-				$(formMessages).text('Oops! An error occured and your message could not be sent.');
+				$(formMessages).text('메일 전송이 실패했습니다..');
 			}
 		});
 	});

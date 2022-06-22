@@ -25,14 +25,14 @@ public class EmailService {
         helper.setTo("tom8672@naver.com");
         helper.setSubject(ask.getAskTitle());
         helper.setText(
-                "문의 신청 일자:" + LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")) + "<br><br>" +
-                "보낸이: " + ask.getName() + "<br><br>" +
+                "문의신청일자: " + LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")) + "<br><br>" +
+                "상담신청자명: " + ask.getName() + "<br><br>" +
                         "문의자 이메일: " + ask.getEmail() + "<br><br>" +
-                        "상담 신청 종류: " + ask.getFirstOption() + "<br><br>" +
-                        (ask.getSecondOption() == null ? "" : "세부 상담 신청 종류: " + (ask.getSecondOption() + "<br>")) +
+                        "상담신청 종류: " + ask.getFirstOption() + "<br><br>" +
                         "상담자 연락처: " + ask.getCellPhone() + "<br><br>" +
-                        "상담 제목: " + ask.getAskTitle() + "<br><br>" +
-                        "상담 내용: " + ask.getAskContent() + "<br><br>"
+                        (ask.getSecondOption() == null ? "" : "세부 상담 신청 종류: " + (ask.getSecondOption() + "<br>")) +
+                        "[상담 제목]<br><br> " + ask.getAskTitle() + "<br><br>" +
+                        "[상담 내용]<br><br> " + ask.getAskContent() + "<br><br>"
         , true);
         emailSender.send(message);
 
