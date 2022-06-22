@@ -21,6 +21,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import javax.mail.MessagingException;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
@@ -55,7 +56,7 @@ public class MemberController {
     }
 
     @PostMapping("/mail")
-    public ResponseEntity<String> manageAskEmail(@RequestBody MemberRequestDTO.AskEmail ask) {
+    public ResponseEntity<String> manageAskEmail(@RequestBody MemberRequestDTO.AskEmail ask) throws MessagingException {
         emailService.sendAsk(ask);
         return ResponseEntity.ok().body("성공적으로 접수되었습니다.");
     }
