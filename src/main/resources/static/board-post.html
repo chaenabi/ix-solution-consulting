@@ -196,7 +196,7 @@
             </div>
             
             <!-- start of board-post  -->
-            <form>
+
               <b>카테고리</b>&emsp;
               <select id="post-category">
                   <option>없음</option>
@@ -206,11 +206,12 @@
               </select>
               <br/><br>
               <b>제목</b>
-              <input id="post-title" type="text" style="border-bottom: 1px solid #909090; width:400px"/>
+            ><input id="post-title" type="text" style="border-bottom: 1px solid #909090; width:400px"/>
               <br/><br/>
 
               <div id="standalone-container">
-                  <div id="toolbar-container">
+                <div id="toolbar-container">
+
                   <span class="ql-formats">
                     <select class="ql-font"></select>
                     <select class="ql-size"></select>
@@ -253,11 +254,9 @@
                   <div id="post-content"></div>
                   <br>
                   <button type="button" class="sent-btn" onclick="handlePostSubmit()">등록</button>
-          
               </div>
             <!-- end of board-post  -->
-
-            
+          </div>
           </div>
         </div>
         <!--End of Event Area-->
@@ -348,8 +347,8 @@
     <script src="js/main.js"></script>
 
     <script src="js/axios-min.js"></script>
-<script src="js/quilljs-1.3.6.js"></script>
-<script src="js/login.js"></script>
-<script src="js/post.js"></script>
+    <script src="js/quilljs-1.3.6.js"></script>
+    <script src="js/login.js"></script>
+    <script src="js/post.js"></script>
   </body>
 </html>

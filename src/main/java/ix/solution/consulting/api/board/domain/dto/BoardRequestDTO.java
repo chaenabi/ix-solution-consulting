@@ -146,29 +146,11 @@ public class BoardRequestDTO {
      */
     @Getter
     @Builder
-    @RequiredArgsConstructor
     public static class PostAttachFileDTO {
         private final String originalFilename;
         private final String filepath;
         private final String filename;
         private final AttachFileMediaType fileType;
-
-        public PostAttachFile toEntity() {
-            return PostAttachFile.builder()
-                    .originalFilename(originalFilename)
-                    .filepath(filepath)
-                    .filename(filename)
-                    .fileType(fileType)
-                    .build();
-        }
-
-        public BoardResponseDTO.UploadPostAttachFile toResponseDTO() {
-            return BoardResponseDTO.UploadPostAttachFile.builder()
-                    .originalFilename(originalFilename)
-                    .filepath(filepath)
-                    .filename(filename)
-                    .fileType(fileType)
-                    .build();
-        }
+        private final byte[] bytes;
     }
 }

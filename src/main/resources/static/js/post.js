@@ -12,6 +12,48 @@ const quill = new Quill('#post-content', {
   theme: 'snow',
 })
 
+quill.getModule('toolbar').addHandler('image', () => {
+  selectLocalImage()
+})
+
+const selectLocalImage = () => {
+  const input = document.createElement('input')
+  input.setAttribute('type', 'file')
+  input.click()
+
+  input.onchange = function () {
+    const fd = new FormData()
+    const file = $(this)[0].files[0]
+    fd.append('fileType', 'IMAGE')
+    fd.append('attachFile', file)
+
+    const account = JSON.parse(localStorage.getItem('account'))
+    $.ajax({
+      type: 'post',
+      enctype: 'multipart/form-data',
+      url: '/v1/posts/attachFile',
+      data: fd,
+      processData: false,
+      contentType: false,
+      beforeSend: function (xhr) {
+        xhr.setRequestHeader('Authorization', `Bearer ${account.accessToken}`)
+      },
+      success: function (data) {
+        const range = quill.getSelection()
+
+        quill.insertEmbed(
+          range.index,
+          'image',
+          data.data
+        )
+      },
+      error: function (err) {
+        console.error('Error: ' + err)
+      },
+    })
+  }
+}
+
 function handlePostSubmit() {
   let category = document.querySelector('#post-category').value
   let title = document.querySelector('#post-title').value

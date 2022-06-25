@@ -51,10 +51,10 @@ public class BoardController {
     }
 
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    @PostMapping("/posts/attachFiles")
-    public ResponseDTO<List<BoardResponseDTO.UploadPostAttachFile>> uploadMediaFiles(AttachFileMediaType fileType, List<MultipartFile> attachFiles) {
-        if (attachFiles.isEmpty()) throw new BizException(BoardCrudErrorCode.POST_MEDIA_NOT_CONTAINS);
-        return new ResponseDTO<>(boardService.uploadMediaFiles(fileType, attachFiles), BoardMessage.SAVE_ATTACH_FILE_SUCCESS, HttpStatus.OK);
+    @PostMapping("/posts/attachFile")
+    public ResponseDTO<String> uploadMediaFiles(AttachFileMediaType fileType, MultipartFile attachFile) {
+        if (attachFile == null || attachFile.isEmpty()) throw new BizException(BoardCrudErrorCode.POST_MEDIA_NOT_CONTAINS);
+        return new ResponseDTO<>(boardService.uploadMediaFiles(fileType, attachFile), BoardMessage.SAVE_ATTACH_FILE_SUCCESS, HttpStatus.OK);
     }
 
     @PreAuthorize("hasRole('ROLE_ADMIN')")

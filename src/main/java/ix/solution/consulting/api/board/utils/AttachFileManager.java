@@ -1,17 +1,21 @@
 package ix.solution.consulting.api.board.utils;
 
+import com.amazonaws.services.s3.AmazonS3Client;
+import com.amazonaws.services.s3.model.*;
 import ix.solution.consulting.api.board.domain.dto.BoardRequestDTO;
 import ix.solution.consulting.api.board.domain.dto.BoardResponseDTO;
 import ix.solution.consulting.api.board.domain.entity.PostAttachFile;
 import ix.solution.consulting.api.board.domain.enums.AttachFileMediaType;
 import ix.solution.consulting.exception.board.BoardCrudErrorCode;
 import ix.solution.consulting.exception.common.BizException;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -19,6 +23,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 import static org.apache.commons.io.FilenameUtils.getBaseName;
@@ -35,55 +40,59 @@ import static org.apache.commons.io.FilenameUtils.getExtension;
  */
 @Slf4j
 @Component
+@RequiredArgsConstructor
 public class AttachFileManager {
 
-    @Value("${upload-directory}")
-    private String DEFAULT_UPLOAD_DIRECTORY;
+    private final AmazonS3Client amazonS3Client;
+
+    @Value("${cloud.aws.s3.bucket}")
+    private String bucket;
 
     /**
      * 업로드 파일들을 지정된 경로에 모두 저장하고 첨부파일 목록을 반환하여
      * 데이터베이스에도 첨부파일명 등이 저장될 수 있도록 합니다.
      *
-     * @param attachFiles 업로드된 첨부파일들
+     * @param attachFile 업로드된 첨부파일
      * @return 수정된 첨부파일명 (첨부파일명_날짜(년월일시간분초)_UUID일부분.확장자명)
      */
-    public List<BoardResponseDTO.UploadPostAttachFile> saveUploadFilesToDisk(final AttachFileMediaType fileType, final List<MultipartFile> attachFiles) {
-        final List<BoardRequestDTO.PostAttachFileDTO> files = renameFile(fileType, attachFiles);
-        final List<BoardResponseDTO.UploadPostAttachFile> result = new ArrayList<>();
+    public String saveUploadFilesToDisk(final AttachFileMediaType fileType, final MultipartFile attachFile) {
+        final BoardRequestDTO.PostAttachFileDTO file = renameFile(fileType, attachFile);
 
-        final File folder = new File(DEFAULT_UPLOAD_DIRECTORY);
+        File uploadFile = convert(file)  // 파일 변환할 수 없으면 에러
+                .orElseThrow(() -> new IllegalArgumentException("error: MultipartFile -> File convert fail"));
 
-        if (!folder.exists()) {
-            try {
-                Files.createDirectories(Paths.get(DEFAULT_UPLOAD_DIRECTORY));
-            } catch (IOException e) {
-                throw new RuntimeException("업로드 폴더를 생성할 수 없었습니다.");
-            }
-        }
-
-        final int attachFileMeasure = attachFiles.size();
-        for (int i = 0; i < attachFileMeasure; i++) {
-            try {
-                attachFiles.get(i).transferTo(Paths.get(files.get(i).getFilepath() + files.get(i).getFilename()));
-            } catch (IOException e) {
-                throw new RuntimeException(e.getMessage());
-            }
-        }
-        files.forEach(file -> result.add(file.toResponseDTO()));
-        return result;
+        return upload(uploadFile, file);
     }
 
-    public void deleteFilesToDisk(String attachFile) {
-        final File file = new File(DEFAULT_UPLOAD_DIRECTORY + attachFile);
-        if (file.exists()) {
-            if (file.delete()) log.info("{} 삭제 완료.", attachFile);
-            else throw new BizException(BoardCrudErrorCode.FAIL_TO_DELETE_ATTACH_FILE);
+    public String upload(File uploadFile, BoardRequestDTO.PostAttachFileDTO file) {
+        String fileName = file.getFilename();   // S3에 저장될 파일 이름
+        String uploadImageUrl = putS3(uploadFile, fileName); // s3로 업로드
+        removeNewFile(uploadFile);
+        return uploadImageUrl;
+    }
+
+    // S3로 업로드
+    private String putS3(File uploadFile, String fileName) {
+        amazonS3Client.putObject(new PutObjectRequest(bucket, fileName, uploadFile).withCannedAcl(CannedAccessControlList.PublicRead));
+        return amazonS3Client.getUrl(bucket, fileName).toString();
+    }
+
+    // 로컬에 저장된 이미지 지우기
+    private void removeNewFile(File targetFile) {
+        if (targetFile.delete()) {
+            log.info("File delete success");
+            return;
         }
+        log.info("File delete fail");
+    }
+
+    public void deleteFilesS3(String fileName) {
+        amazonS3Client.deleteObject(new DeleteObjectRequest(bucket, fileName));
     }
 
     public boolean doesFileExist(BoardRequestDTO.PostAttachFileDTO file) {
-        final File findFile = new File(file.getFilepath() + file.getFilename());
-        return findFile.exists();
+        S3Object s3Object = amazonS3Client.getObject(new GetObjectRequest(bucket, file.getFilename()));
+        return s3Object != null;
     }
 
     /**
@@ -92,30 +101,49 @@ public class AttachFileManager {
      * <p>
      * 예를들어 원본파일명이 example.png 라면 c:/upload/example_20220128171150_bcdc8ebd.png 로 변경됩니다.
      *
-     * @param attachFiles 업로드된 첨부파일들
+     * @param attachFile 업로드된 첨부파일
      * @return 수정된 첨부파일명
      */
-    private List<BoardRequestDTO.PostAttachFileDTO> renameFile(AttachFileMediaType fileType, List<MultipartFile> attachFiles) {
-        final List<BoardRequestDTO.PostAttachFileDTO> files = new ArrayList<>();
-
+    private BoardRequestDTO.PostAttachFileDTO renameFile(AttachFileMediaType fileType, MultipartFile attachFile) {
         final LocalDateTime now = LocalDateTime.now();
         final String randomString = UUID.randomUUID().toString().split("-")[0];
+        final byte[] bytes;
+        try {
+            bytes = attachFile.getBytes();
+        } catch (IOException ie) {
+            throw new RuntimeException("invalid image source.", ie);
+        }
 
-        attachFiles.forEach(file -> files.add(BoardRequestDTO.PostAttachFileDTO.builder()
+        return BoardRequestDTO.PostAttachFileDTO.builder()
                     .fileType(fileType)
-                    .originalFilename(file.getOriginalFilename())
-                    .filepath(DEFAULT_UPLOAD_DIRECTORY)
+                    .originalFilename(attachFile.getOriginalFilename())
+                    .filepath(System.getProperty("user.dir"))
                     .filename(
-                        getBaseName(file.getOriginalFilename())
+                        getBaseName(attachFile.getOriginalFilename())
                         + "_"
                         + now.format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss"))
                         + "_"
                         + randomString
                         + "."
-                        + getExtension(file.getOriginalFilename())
-                )
-                .build()));
+                        + getExtension(attachFile.getOriginalFilename())
+                    )
+                    .bytes(bytes)
+                    .build();
+    }
 
-        return files;
+    // 로컬에 파일 업로드 하기
+    private Optional<File> convert(BoardRequestDTO.PostAttachFileDTO file) {
+        File convertFile = new File(System.getProperty("user.dir") + "/" + file.getFilename());
+        try {
+            if (convertFile.createNewFile()) { // 바로 위에서 지정한 경로에 File 이 생성됨 (경로가 잘못되었다면 생성 불가능)
+                try (FileOutputStream fos = new FileOutputStream(convertFile)) { // FileOutputStream 데이터를 파일에 바이트 스트림으로 저장하기 위함
+                    fos.write(file.getBytes());
+                }
+                return Optional.of(convertFile);
+            }
+        } catch (IOException ie) {
+            throw new RuntimeException("cannot create image files.", ie);
+        }
+        return Optional.empty();
     }
 }

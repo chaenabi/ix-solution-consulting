@@ -124,19 +124,19 @@ public class BoardService {
             postAttachFileRepository.flush();
 
             for (String filename : wantToDelete.getAttachFilenames()) {
-                attachFileManager.deleteFilesToDisk(filename);
+                attachFileManager.deleteFilesS3(filename);
             }
         }
     }
 
-    public List<BoardResponseDTO.UploadPostAttachFile> uploadMediaFiles(AttachFileMediaType fileType, List<MultipartFile> attachFiles) {
-        return attachFileManager.saveUploadFilesToDisk(fileType, attachFiles);
+    public String uploadMediaFiles(AttachFileMediaType fileType, MultipartFile attachFile) {
+        return attachFileManager.saveUploadFilesToDisk(fileType, attachFile);
     }
 
     public void deleteMediaFiles(String attachFile) {
         PostAttachFile wantToRemove = postAttachFileRepository.findByFilename(attachFile)
                 .orElseThrow(() -> new BizException(BoardCrudErrorCode.POST_MEDIA_NOT_CONTAINS));
         postAttachFileRepository.delete(wantToRemove);
-        attachFileManager.deleteFilesToDisk(attachFile);
+        attachFileManager.deleteFilesS3(attachFile);
     }
 }

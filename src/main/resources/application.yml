@@ -64,4 +64,23 @@ spring:
             enable: true
             trust: smtp.naver.com
 
-upload-directory: src/main/resources/upload/
+# upload-directory: src/main/resources/upload/
+
+cloud:
+  aws:
+    stack:
+      auto: false
+    region:
+      static: ap-northeast-2
+    credentials:
+      access-key: AKIA45T5MDOASGZFLNUT
+      secret-key: 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
+    s3:
+      bucket: ixconsultingbucket
+
+logging:
+  level:
+    com:
+      amazonaws:
+        util:
+          EC2MetadataUtils: error

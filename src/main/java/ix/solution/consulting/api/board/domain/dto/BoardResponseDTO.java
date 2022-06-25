@@ -69,15 +69,4 @@ public class BoardResponseDTO {
             this.categoryName = board.getCategoryName();
         }
     }
-
-    @Getter
-    @Builder
-    @RequiredArgsConstructor
-    public static class UploadPostAttachFile {
-        private final String originalFilename;
-        private final String filepath;
-        private final String filename;
-        private final AttachFileMediaType fileType;
-    }
-
 }
