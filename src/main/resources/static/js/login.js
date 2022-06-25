@@ -11,11 +11,6 @@ const isAccessTokenExpired = token => {
   return false
 }
 
-const handleSignOut = () => {
-  localStorage.removeItem('account')
-  location.reload()
-}
-
 const handleSignIn = () => {
   let id = document.querySelector('#login-id').value
   let password = document.querySelector('#login-password').value

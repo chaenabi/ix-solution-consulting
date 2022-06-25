@@ -27,9 +27,9 @@ const getPostList = pageNumber => {
     for (p of post) {
       row = postListTable.insertRow()
 
-      cell = row.insertCell()
-      cell.style.wordBreak = 'break-all'
-      cell.innerHTML = `<td>${p.postId}</td>`
+      // cell = row.insertCell()
+      // cell.style.wordBreak = 'break-all'
+      // cell.innerHTML = `<td>${p.postId}</td>`
 
       cell = row.insertCell()
       cell.style.wordBreak = 'break-all'
@@ -48,6 +48,7 @@ const getPostList = pageNumber => {
       cell = row.insertCell()
       cell.width = 20
       cell.style.wordBreak = 'break-all'
+      //cell.className = 'align-middle'
       cell.innerHTML = `<td>${p.createAt}</td>`
 
       cell = row.insertCell()
@@ -73,6 +74,9 @@ const authBtn = () => {
   if (localStorage.getItem('account')) {
     let writeBtn = document.querySelector('#auth-write-btn')
     writeBtn.innerHTML = `<a href='#' onclick='fn_write()' class="btn btn-success">글쓰기</a>`
+
+    let signOutbtn = document.querySelector('#sign-out-btn')
+    signOutbtn.innerHTML = `<a href='#' onclick='signOut()' class="btn btn-danger">로그아웃</a>`
   } else {
     let authBtn = document.querySelector('#auth-write-btn')
     authBtn.innerHTML = `<a href='login-register.html' class="btn btn-success">로그인</a>`
@@ -99,4 +103,11 @@ window.addEventListener('load', onload())
 
 const findOnePost = postId => {
   window.open(`board-detail.html?postId=${postId}`, '_self')
+}
+
+const signOut = () => {
+  if (confirm('로그아웃 하시겠습니까?')) {
+    localStorage.removeItem('account')
+    location.reload()
+  }
 }

@@ -45,7 +45,7 @@ public class Board {
     @Convert(converter = YNToBooleanConverter.class)
     private Boolean blocked;
 
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd hh a")
     @CreationTimestamp
     private LocalDateTime createAt;
 
