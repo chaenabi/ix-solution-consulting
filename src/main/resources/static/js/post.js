@@ -57,7 +57,7 @@ const selectLocalImage = () => {
 function handlePostSubmit() {
   let category = document.querySelector('#post-category').value
   let title = document.querySelector('#post-title').value
-  let content = document.querySelector('#post-content').outerText
+  let content = document.querySelector('.ql-editor').innerHTML
 
   if (title.trim() === '') {
     alert('제목을 입력해주세요')
@@ -79,7 +79,7 @@ function handlePostSubmit() {
   }
 
   axios
-    .post(`http://3.39.207.182:8080/v1/posts`, body, {
+    .post(`http://localhost:8080/v1/posts`, body, {
       headers: {
         Authorization: `Bearer ${account.accessToken}`,
       },
@@ -98,7 +98,7 @@ function preventTokenExpired() {
     headers: { Authorization: `Bearer ${parseAccount.accessToken}` },
   }
 
-  const result = axios.get(`http://3.39.207.182:8080/v1/auth/login`, auth)
+  const result = axios.get(`http://localhost:8080/v1/auth/login`, auth)
 
   result.then(res => {
     const data = res.data.data

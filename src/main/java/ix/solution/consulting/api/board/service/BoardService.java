@@ -46,27 +46,9 @@ public class BoardService {
     final int pagingSize = 10;
 
     public Long savePost(BoardRequestDTO.PostSaveRequest dto) {
-
         Member member = memberRepository.findById(dto.getMemberId())
                 .orElseThrow(() -> new BizException(MemberCrudErrorCode.MEMBER_NOT_FOUND));
-
         Board post = postRepository.save(dto.toEntity(member));
-
-        if (dto.getAttachFiles() != null) {
-            for (BoardRequestDTO.PostAttachFileDTO file : dto.getAttachFiles()) {
-                if (attachFileManager.doesFileExist(file)) {
-                    postAttachFileRepository.save(
-                            PostAttachFile.builder()
-                                    .originalFilename(file.getOriginalFilename())
-                                    .filepath(file.getFilepath())
-                                    .filename(file.getFilename())
-                                    .fileType(file.getFileType())
-                                    .post(post)
-                                    .build());
-                }
-            }
-        }
-
         return post.getPostId();
     }
 
