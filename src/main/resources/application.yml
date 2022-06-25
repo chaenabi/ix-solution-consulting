@@ -29,7 +29,7 @@ spring:
 
     properties:
       hibernate:
-        format_sql: true
+        format_sql: false
     show-sql: true
 
     # 테이블이 생성된 이후에 insert 를 실행합니다.
