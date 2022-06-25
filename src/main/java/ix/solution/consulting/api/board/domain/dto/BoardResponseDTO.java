@@ -23,7 +23,7 @@ public class BoardResponseDTO {
         private final String postContent;
         private final String categoryName;
         private final Member author;
-        @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd hh a")
+        @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd a hh:mm")
         private final LocalDateTime createAt;
         private final Long sawCount;
         private final List<Comment> comments;

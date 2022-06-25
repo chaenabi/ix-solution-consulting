@@ -1,7 +1,21 @@
 window.addEventListener('load', () => {
   if (!getSignInData()) {
     alert('글쓰기 권한이 없습니다.')
-    location.href = '../board.html'
+    history.back()
+  }
+
+  if (location.href.includes('?')) {
+    let urlparam = location.href.split('?')
+    let postId = urlparam[1].split('=')[1].replace('content-edit', '')
+    const postOne = axios.get(`http://localhost:8080/v1/posts/${postId}`)
+
+    postOne.then(res => {
+      const result = res.data.data
+      document.querySelector('#post-category').value = result.categoryName
+      document.querySelector('#post-title').value = result.postTitle
+      document.querySelector('.ql-editor').innerHTML = result.postContent
+    })
+
   }
 })
 

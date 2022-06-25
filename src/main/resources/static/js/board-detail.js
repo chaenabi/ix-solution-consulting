@@ -18,7 +18,7 @@ const loadPostOne = () => {
 
     if (JSON.parse(localStorage.getItem('account')).id !== null) {
       const view = document.querySelector('#single-item-comment-view')
-      //view.innerHTML += `<i class="zmdi zmdi-edit" id="content-edit" onclick="prepareEditComment(event);" onmousehover="" style="cursor: pointer; color: blue"></i>`
+      view.innerHTML += `<i class="zmdi zmdi-edit" id="content-edit${postId}" onclick="prepareEditComment(event);" onmousehover="" style="cursor: pointer; color: blue"></i>&emsp;`
       view.innerHTML += `<i class="zmdi zmdi-delete" id="content-delete${postId}" onclick="deletePost(event)" onmousehover="" style="cursor: pointer; color: red"></i>`
     }
 
@@ -131,20 +131,26 @@ let preComment = ''
 let createEditOnce = true
 
 const prepareEditComment = e => {
+  if (localStorage.getItem('account') === null) return
   const getId = e.target.id.replace('comment-edit', '')
-  const commentTag = document.querySelector(`#blog-comment${getId}`)
-  preComment = commentTag.innerHTML
-  if (createEditOnce) {
-    commentTag.innerHTML = ''
-    commentTag.innerHTML = `<textarea id='edit-textarea${getId}'>${preComment}</textarea>`
-    commentTag.innerHTML += `<br><br>Password: <input type='password' id="edit-password${getId}" style='width:200px;'/>`
-    commentTag.innerHTML += `<br><br><button class="update-btn" id="edit-btn${getId}" onclick="updateComment(event);">수정</button>`
-    commentTag.innerHTML += `<p id="failMessage" style="color:red; font-weight: bold;"></p>`
-    createEditOnce = false
-  }
+
+  location.href = `../board-post.html?id=${getId}`
+
+  // const commentTag = document.querySelector(`#blog-comment${getId}`)
+  // preComment = commentTag.innerHTML
+  //
+  // if (createEditOnce) {
+  //   commentTag.innerHTML = ''
+  //   commentTag.innerHTML = `<textarea id='edit-textarea${getId}'>${preComment}</textarea>`
+  //   commentTag.innerHTML += `<br><br>Password: <input type='password' id="edit-password${getId}" style='width:200px;'/>`
+  //   commentTag.innerHTML += `<br><br><button class="update-btn" id="edit-btn${getId}" onclick="updateComment(event);">수정</button>`
+  //   commentTag.innerHTML += `<p id="failMessage" style="color:red; font-weight: bold;"></p>`
+  //   createEditOnce = false
+  // }
 }
 
 const updateComment = e => {
+  if (localStorage.getItem('account') === null) return
   const getCommentId = e.target.id.replace('edit-btn', '')
   const comment = document.querySelector(`#edit-textarea${getCommentId}`).value
   const password = document.querySelector(`#edit-password${getCommentId}`).value
@@ -181,6 +187,7 @@ const updateComment = e => {
 let createRemoveOnce = true
 
 const prepareDeleteComment = e => {
+  if (localStorage.getItem('account') === null) return
   const getId = e.target.id.replace('comment-delete', '')
   const commentTag = document.querySelector(`#blog-comment${getId}`)
   if (createRemoveOnce) {
@@ -192,6 +199,7 @@ const prepareDeleteComment = e => {
 }
 
 const deleteComment = e => {
+  if (localStorage.getItem('account') === null) return
   const getCommentId = e.target.id.replace('remove-btn', '')
   const password = document.querySelector(`#edit-password${getCommentId}`).value
 
