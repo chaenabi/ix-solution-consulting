@@ -33,7 +33,7 @@ spring:
 
   h2:
     console:
-      enabled: true
+      enabled: false
 
   servlet:
     multipart:
@@ -63,3 +63,9 @@ logging:
       amazonaws:
         util:
           EC2MetadataUtils: error
+    org:
+      hibernate:
+        SQL: debug
+        type:
+          decriptor:
+            sql: trace
