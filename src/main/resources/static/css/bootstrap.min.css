@@ -1848,7 +1848,7 @@ pre code {
   }
 }
 .table-responsive {
-  display: block;
+  display: block !important;
   width: 100%;
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;

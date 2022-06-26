@@ -36,28 +36,22 @@ const getPostList = pageNumber => {
       cell.innerHTML = `<td>${p.categoryName}</td>`
 
       cell = row.insertCell()
-      cell.width = 100
       cell.style.wordBreak = 'break-all'
       cell.innerHTML = `<td><a href="#" onclick=findOnePost(${p.postId})>${p.postTitle}</a></td>`
 
       cell = row.insertCell()
-      cell.width = 10
       cell.style.wordBreak = 'break-all'
       cell.innerHTML = `<td>${p.member?.nickname}</td>`
 
       cell = row.insertCell()
-      cell.width = 20
       cell.style.wordBreak = 'break-all'
-      //cell.className = 'align-middle'
       cell.innerHTML = `<td>${p.createAt}</td>`
 
       cell = row.insertCell()
-      cell.width = 10
       cell.style.wordBreak = 'break-all'
       cell.innerHTML = `<td>${p.comments.length}</td>`
 
       cell = row.insertCell()
-      cell.width = 10
       cell.style.wordBreak = 'break-all'
       cell.innerHTML = `<td>${p.sawCount}</td>`
     }
