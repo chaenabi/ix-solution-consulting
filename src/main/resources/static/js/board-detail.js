@@ -1,3 +1,9 @@
+window.addEventListener('load', () => {
+  if (!location.href.includes('?')) {
+    location.href = 'board.html'
+  }
+})
+
 const loadPostOne = () => {
   let urlparam = location.href.split('?')
   let postId = urlparam[1].split('=')[1].replace('#', '')
