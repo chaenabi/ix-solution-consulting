@@ -25,7 +25,6 @@ public class EmailService {
         MimeMessage message = emailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(message, "UTF-8");
         // get mail to client
-
         helper.setFrom(username);
         helper.setTo(username);
         helper.setSubject(ask.getAskTitle());

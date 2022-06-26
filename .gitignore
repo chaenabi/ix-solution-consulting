@@ -39,3 +39,4 @@ out/
 ### private ###
 application-cloud.yml
 application-mail.yml
+application-db.yml

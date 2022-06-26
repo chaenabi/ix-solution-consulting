@@ -6,7 +6,6 @@ server:
       force-request: true
       enabled: true
 
-
 spring:
   mvc:
     pathmatch:
@@ -15,13 +14,6 @@ spring:
     hiddenmethod:
       filter:
         enabled: true
-
-  datasource:
-    url: jdbc:h2:mem:testdb;MODE=MySQL;DB_CLOSE_DELAY=-1
-    username: sa
-    password:
-    driver-class-name: org.h2.Driver
-
   jpa:
     hibernate:
       ddl-auto: none
@@ -29,18 +21,25 @@ spring:
 
     properties:
       hibernate:
-        format_sql: false
-    show-sql: true
-
+        format_sql: true
+        #show_sql: true
+        dialect: org.hibernate.dialect.MySQLDialect
+        jdbc:
+          lob:
+            non_contextual_creation: true
+    # show-sql: true
     # 테이블이 생성된 이후에 insert 를 실행합니다.
     defer-datasource-initialization: true
+
   h2:
     console:
       enabled: true
+
   servlet:
     multipart:
-      max-file-size: 10GB
-      max-request-size: 10GB
+      max-file-size: 100GB
+      max-request-size: 100GB
+
   thymeleaf:
     prefix: classpath:/static/
 
@@ -54,20 +53,9 @@ spring:
     include:
       - cloud
       - mail
+      - db
 
 # upload-directory: src/main/resources/upload/
-
-cloud:
-  aws:
-    stack:
-      auto: false
-    region:
-      static: ap-northeast-2
-    credentials:
-      access-key: AKIA45T5MDOASGZFLNUT
-      secret-key: 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
-    s3:
-      bucket: ixconsultingbucket
 
 logging:
   level:
