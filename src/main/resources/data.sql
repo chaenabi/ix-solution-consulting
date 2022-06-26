@@ -1,2 +1,2 @@
 INSERT INTO member (member_id, name, nickname, password, role, register_date)
-VALUES ('1', 'ADMIN', 'ix-admin', '$2a$12$xcas35IhXeXzczg846Q03eOBawPDMQkjfGix8lAjqM5hDhhqWX4ei', 'ROLE_ADMIN', now()); -- pw: 1ixconsulting!
+VALUES ('1', 'ADMIN', '관리자', '$2a$12$xcas35IhXeXzczg846Q03eOBawPDMQkjfGix8lAjqM5hDhhqWX4ei', 'ROLE_ADMIN', now()); -- pw: 1ixconsulting!
