@@ -77,7 +77,7 @@ function handlePostSubmit() {
   }
 
   axios
-    .post(`http://localhost:8080/v1/posts`, body, {
+    .post(`http://3.39.207.182:8080/v1/posts`, body, {
       headers: {
         Authorization: `Bearer ${account.accessToken}`,
       },
@@ -96,7 +96,7 @@ function preventTokenExpired() {
     headers: { Authorization: `Bearer ${parseAccount.accessToken}` },
   }
 
-  const result = axios.get(`http://localhost:8080/v1/auth/login`, auth)
+  const result = axios.get(`http://3.39.207.182:8080/v1/auth/login`, auth)
 
   result.then(res => {
     const data = res.data.data
@@ -120,7 +120,7 @@ const isForUpdate = () => {
   if (location.href.includes('?')) {
     let urlparam = location.href.split('?')
     let postId = urlparam[1].split('=')[1].replace('content-edit', '')
-    const postOne = axios.get(`http://localhost:8080/v1/posts/${postId}`)
+    const postOne = axios.get(`http://3.39.207.182:8080/v1/posts/${postId}`)
 
     postOne.then(res => {
       const result = res.data.data
@@ -165,7 +165,7 @@ const handlePatchPost = postId => {
     postId: postId,
   }
 
-  const result = axios.patch(`http://localhost:8080/v1/posts`, body, {
+  const result = axios.patch(`http://3.39.207.182:8080/v1/posts`, body, {
     headers: {
       Authorization: `Bearer ${account.accessToken}`,
     },
