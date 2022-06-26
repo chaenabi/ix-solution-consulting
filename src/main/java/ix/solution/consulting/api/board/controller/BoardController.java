@@ -65,12 +65,13 @@ public class BoardController {
         return new ResponseDTO<>(BoardMessage.REMOVE_ATTACH_FILE_SUCCESS, HttpStatus.OK);
     }
 
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
-    @PatchMapping("/posts")
-    public ResponseDTO<BoardResponseDTO.PatchPost> updateOnePost(@Valid @RequestBody BoardRequestDTO.UpdatePost dto, BindingResult result) {
-        if (result.hasErrors()) throw new InvalidBoardParameterException(result, BoardCrudErrorCode.BOARD_CRUD_FAIL);
-        return new ResponseDTO<>(boardService.updateOnePost(dto), BoardMessage.UPDATE_POST_SUCCESS, HttpStatus.OK);
-    }
+    // not use
+//    @PreAuthorize("hasRole('ROLE_ADMIN')")
+//    @PatchMapping("/posts")
+//    public ResponseDTO<BoardResponseDTO.PatchPost> updateOnePost(@Valid @RequestBody BoardRequestDTO.UpdatePost dto, BindingResult result) {
+//        if (result.hasErrors()) throw new InvalidBoardParameterException(result, BoardCrudErrorCode.BOARD_CRUD_FAIL);
+//        return new ResponseDTO<>(boardService.updateOnePost(dto), BoardMessage.UPDATE_POST_SUCCESS, HttpStatus.OK);
+//    }
 
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PostMapping("/posts/remove")

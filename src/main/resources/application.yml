@@ -50,19 +50,10 @@ spring:
     restart:
       enabled: true
 
-  mail:
-    default-encoding: UTF-8
-    host: smtp.naver.com
-    port: 465
-    username: tom8672@naver.com
-    password: npc2023per4@e
-    properties:
-      mail:
-        smtp:
-          auth: true
-          ssl:
-            enable: true
-            trust: smtp.naver.com
+  profiles:
+    include:
+      - cloud
+      - mail
 
 # upload-directory: src/main/resources/upload/
 

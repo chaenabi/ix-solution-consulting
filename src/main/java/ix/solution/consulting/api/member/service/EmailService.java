@@ -2,6 +2,7 @@ package ix.solution.consulting.api.member.service;
 
 import ix.solution.consulting.api.member.domain.dto.MemberRequestDTO;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
@@ -17,12 +18,16 @@ public class EmailService {
 
     private final JavaMailSender emailSender;
 
+    @Value("${spring.mail.username}")
+    private String username;
+
     public void sendAsk(MemberRequestDTO.AskEmail ask) throws MessagingException {
         MimeMessage message = emailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(message, "UTF-8");
         // get mail to client
-        helper.setFrom("tom8672@naver.com");
-        helper.setTo("tom8672@naver.com");
+
+        helper.setFrom(username);
+        helper.setTo(username);
         helper.setSubject(ask.getAskTitle());
         helper.setText(
                 "문의신청일자: " + LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")) + "<br><br>" +
@@ -37,7 +42,7 @@ public class EmailService {
         emailSender.send(message);
 
         // send mail to client
-        helper.setFrom("tom8672@naver.com");
+        helper.setFrom(username);
         helper.setTo(ask.getEmail());
         helper.setSubject("[ix-consulting] 상담 신청이 성공적으로 접수되었습니다.");
         helper.setText("<br>" + ask.getName() + "님, " +

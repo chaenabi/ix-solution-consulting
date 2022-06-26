@@ -14,7 +14,7 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 /**
  * swagger configuration
- * endpoint: http://localhost:8080/swagger-ui/index.html
+ * endpoint: http://3.39.207.182:8080/swagger-ui/index.html
  *
  * @author MC Lee
  * @since 2.6.7 spring boot
