@@ -54,6 +54,6 @@ public class MemberController {
     @PostMapping("/mail")
     public ResponseEntity<String> manageAskEmail(@RequestBody MemberRequestDTO.AskEmail ask) throws MessagingException {
         emailService.sendAsk(ask);
-        return ResponseEntity.ok().body("성공적으로 접수되었습니다.");
+        return ResponseEntity.ok().body("접수 완료. 작성하신 이메일로 안내사항을 보내드리니 확인 부탁드립니다.");
     }
 }

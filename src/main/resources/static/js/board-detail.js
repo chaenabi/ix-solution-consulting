@@ -22,7 +22,9 @@ const loadPostOne = () => {
       '#content-commentCount'
     ).innerHTML = `<i class="zmdi zmdi-comments"></i> ${result.commentSize}`
 
-    if (JSON.parse(localStorage.getItem('account')).id !== null) {
+    const account = JSON.parse(localStorage.getItem('account'))
+
+    if (account !== null) {
       const view = document.querySelector('#single-item-comment-view')
       view.innerHTML += `<i class="zmdi zmdi-edit" id="content-edit${postId}" onclick="updatePost(event);" onmousehover="" style="cursor: pointer; color: blue"></i>&emsp;`
       view.innerHTML += `<i class="zmdi zmdi-delete" id="content-delete${postId}" onclick="deletePost(event)" onmousehover="" style="cursor: pointer; color: red"></i>`
