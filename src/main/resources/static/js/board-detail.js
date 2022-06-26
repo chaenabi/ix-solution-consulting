@@ -117,13 +117,14 @@ const addComment = () => {
     password: password,
   }
 
-  console.log(body)
-
-  const result = axios.post(`http:/3.39.207.182:8080/v1/comments`, body)
+  const result = axios.post(`http://3.39.207.182:8080/v1/comments`, body)
 
   result.then(res => {
     console.log(res.data)
     location.reload()
+  })
+  .catch(err => {
+    console.log(`error: `, err)
   })
 }
 
