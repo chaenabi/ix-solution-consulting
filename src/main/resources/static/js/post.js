@@ -4,19 +4,7 @@ window.addEventListener('load', () => {
     history.back()
   }
 
-  if (location.href.includes('?')) {
-    let urlparam = location.href.split('?')
-    let postId = urlparam[1].split('=')[1].replace('content-edit', '')
-    const postOne = axios.get(`http://3.39.207.182:8080/v1/posts/${postId}`)
-
-    postOne.then(res => {
-      const result = res.data.data
-      document.querySelector('#post-category').value = result.categoryName
-      document.querySelector('#post-title').value = result.postTitle
-      document.querySelector('.ql-editor').innerHTML = result.postContent
-    })
-
-  }
+  isForUpdate()
 })
 
 const quill = new Quill('#post-content', {
@@ -55,11 +43,7 @@ const selectLocalImage = () => {
       success: function (data) {
         const range = quill.getSelection()
 
-        quill.insertEmbed(
-          range.index,
-          'image',
-          data.data
-        )
+        quill.insertEmbed(range.index, 'image', data.data)
       },
       error: function (err) {
         console.error('Error: ' + err)
@@ -131,3 +115,68 @@ const twoHour = 1000 * 60 * 60 * 2
 setInterval(() => {
   preventTokenExpired()
 }, twoHour)
+
+const isForUpdate = () => {
+  if (location.href.includes('?')) {
+    let urlparam = location.href.split('?')
+    let postId = urlparam[1].split('=')[1].replace('content-edit', '')
+    const postOne = axios.get(`http://3.39.207.182:8080/v1/posts/${postId}`)
+
+    postOne.then(res => {
+      const result = res.data.data
+      document.querySelector('#post-category').value = result.categoryName
+      document.querySelector('#post-title').value = result.postTitle
+      document.querySelector('.ql-editor').innerHTML = result.postContent
+    })
+
+    let sentBtn = document.querySelector('.sent-btn')
+    sentBtn.hidden = true
+
+    const updatePostTag = `<button type="button" class="update-btn" onclick="handlePatchPost(${postId})">수정</button>`
+
+    sentBtn.insertAdjacentHTML('afterend', updatePostTag)
+  }
+}
+
+const handlePatchPost = postId => {
+  if (localStorage.getItem('account') === null) return
+
+  let category = document.querySelector('#post-category').value
+  let title = document.querySelector('#post-title').value
+  let content = document.querySelector('.ql-editor').innerHTML
+
+  if (title.trim() === '') {
+    alert('제목을 입력해주세요')
+    return
+  }
+
+  if (content.trim() === '') {
+    alert('내용을 입력해주세요')
+    return
+  }
+
+  const account = JSON.parse(localStorage.getItem('account'))
+
+  const body = {
+    categoryName: category,
+    postTitle: title,
+    postContent: content,
+    memberId: account.id,
+    postId: postId,
+  }
+
+  const result = axios.patch(`http://3.39.207.182:8080/v1/posts`, body, {
+    headers: {
+      Authorization: `Bearer ${account.accessToken}`,
+    },
+  })
+
+  result
+    .then(_ => {
+      alert('수정이 성공적으로 완료되었습니다.')
+      location.href = 'board.html'
+    })
+    .catch(err => {
+      console.log(`error: `, err)
+    })
+}

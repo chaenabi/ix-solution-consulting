@@ -18,7 +18,7 @@ const loadPostOne = () => {
 
     if (JSON.parse(localStorage.getItem('account')).id !== null) {
       const view = document.querySelector('#single-item-comment-view')
-      view.innerHTML += `<i class="zmdi zmdi-edit" id="content-edit${postId}" onclick="prepareEditComment(event);" onmousehover="" style="cursor: pointer; color: blue"></i>&emsp;`
+      view.innerHTML += `<i class="zmdi zmdi-edit" id="content-edit${postId}" onclick="updatePost(event);" onmousehover="" style="cursor: pointer; color: blue"></i>&emsp;`
       view.innerHTML += `<i class="zmdi zmdi-delete" id="content-delete${postId}" onclick="deletePost(event)" onmousehover="" style="cursor: pointer; color: red"></i>`
     }
 
@@ -54,6 +54,12 @@ const loadPostOne = () => {
 }
 
 window.addEventListener('load', loadPostOne())
+
+const updatePost = e => {
+  const postId = e.target.id.replace('content-edit', '')
+
+  location.href = `board-post.html?id=${postId}`
+}
 
 const deletePost = e => {
   if (confirm('정말로 삭제하시겠습니까? 삭제하면 되돌릴 수 없습니다.')) {
@@ -119,13 +125,14 @@ const addComment = () => {
 
   const result = axios.post(`http://3.39.207.182:8080/v1/comments`, body)
 
-  result.then(res => {
-    console.log(res.data)
-    location.reload()
-  })
-  .catch(err => {
-    console.log(`error: `, err)
-  })
+  result
+    .then(res => {
+      console.log(res.data)
+      location.reload()
+    })
+    .catch(err => {
+      console.log(`error: `, err)
+    })
 }
 
 let preComment = ''
@@ -135,19 +142,17 @@ const prepareEditComment = e => {
   if (localStorage.getItem('account') === null) return
   const getId = e.target.id.replace('comment-edit', '')
 
-  location.href = `../board-post.html?id=${getId}`
+  const commentTag = document.querySelector(`#blog-comment${getId}`)
+  preComment = commentTag.innerHTML
 
-  // const commentTag = document.querySelector(`#blog-comment${getId}`)
-  // preComment = commentTag.innerHTML
-  //
-  // if (createEditOnce) {
-  //   commentTag.innerHTML = ''
-  //   commentTag.innerHTML = `<textarea id='edit-textarea${getId}'>${preComment}</textarea>`
-  //   commentTag.innerHTML += `<br><br>Password: <input type='password' id="edit-password${getId}" style='width:200px;'/>`
-  //   commentTag.innerHTML += `<br><br><button class="update-btn" id="edit-btn${getId}" onclick="updateComment(event);">수정</button>`
-  //   commentTag.innerHTML += `<p id="failMessage" style="color:red; font-weight: bold;"></p>`
-  //   createEditOnce = false
-  // }
+  if (createEditOnce) {
+    commentTag.innerHTML = ''
+    commentTag.innerHTML = `<textarea id='edit-textarea${getId}'>${preComment}</textarea>`
+    commentTag.innerHTML += `<br><br>Password: <input type='password' id="edit-password${getId}" style='width:200px;'/>`
+    commentTag.innerHTML += `<br><br><button class="update-btn" id="edit-btn${getId}" onclick="updateComment(event);">수정</button>`
+    commentTag.innerHTML += `<p id="failMessage" style="color:red; font-weight: bold;"></p>`
+    createEditOnce = false
+  }
 }
 
 const updateComment = e => {
