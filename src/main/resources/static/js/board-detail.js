@@ -163,7 +163,7 @@ const updateComment = e => {
     password: password,
   }
 
-  const result = axios.patch(`http://3.39.207.182:8080:8080/v1/comments`, body)
+  const result = axios.patch(`http://3.39.207.182:8080/v1/comments`, body)
 
   result
     .then(res => {
