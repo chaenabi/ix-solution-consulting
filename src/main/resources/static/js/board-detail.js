@@ -7,7 +7,7 @@ window.addEventListener('load', () => {
 const loadPostOne = () => {
   let urlparam = location.href.split('?')
   let postId = urlparam[1].split('=')[1].replace('#', '')
-  const postOne = axios.get(`http://3.39.207.182:8080/v1/posts/${postId}`)
+  const postOne = axios.get(`https://ixconsulting.co.kr/v1/posts/${postId}`)
 
   postOne.then(res => {
     const result = res.data.data
@@ -82,7 +82,7 @@ const deletePost = e => {
     }
 
     axios
-      .post(`http://3.39.207.182:8080/v1/posts/remove`, body, {
+      .post(`https://ixconsulting.co.kr/v1/posts/remove`, body, {
         headers: {
           Authorization: `Bearer ${account.accessToken}`,
         },
@@ -131,7 +131,7 @@ const addComment = () => {
     password: password,
   }
 
-  const result = axios.post(`http://3.39.207.182:8080/v1/comments`, body)
+  const result = axios.post(`https://ixconsulting.co.kr/v1/comments`, body)
 
   result
     .then(res => {
@@ -177,7 +177,7 @@ const updateComment = e => {
     password: password,
   }
 
-  const result = axios.patch(`http://3.39.207.182:8080/v1/comments`, body)
+  const result = axios.patch(`https://ixconsulting.co.kr/v1/comments`, body)
 
   result
     .then(res => {
@@ -224,7 +224,7 @@ const deleteComment = e => {
     password: password,
   }
 
-  const result = axios.delete(`http://3.39.207.182:8080/v1/comments/remove`, {
+  const result = axios.delete(`https://ixconsulting.co.kr/v1/comments/remove`, {
     params,
   })
 
