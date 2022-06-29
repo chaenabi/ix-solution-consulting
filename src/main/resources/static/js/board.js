@@ -28,31 +28,30 @@ const getPostList = pageNumber => {
       row = postListTable.insertRow()
 
       // cell = row.insertCell()
-      // cell.style.wordBreak = 'break-all'
       // cell.innerHTML = `<td>${p.postId}</td>`
 
       cell = row.insertCell()
-      cell.style.wordBreak = 'break-all'
+      cell.style.minWidth = '95px'
       cell.innerHTML = `<td>${p.categoryName}</td>`
 
       cell = row.insertCell()
-      cell.style.wordBreak = 'break-all'
+      cell.style.minWidth = '500px'
       cell.innerHTML = `<td><a href="#" onclick=findOnePost(${p.postId})>${p.postTitle}</a></td>`
 
       cell = row.insertCell()
-      cell.style.wordBreak = 'break-all'
+      cell.style.minWidth = '70px'
       cell.innerHTML = `<td>${p.member?.nickname}</td>`
 
       cell = row.insertCell()
-      cell.style.wordBreak = 'break-all'
+      cell.style.minWidth = '150px'
       cell.innerHTML = `<td>${p.createAt}</td>`
 
       cell = row.insertCell()
-      cell.style.wordBreak = 'break-all'
+      cell.style.minWidth = '70px'
       cell.innerHTML = `<td>${p.comments.length}</td>`
 
       cell = row.insertCell()
-      cell.style.wordBreak = 'break-all'
+      cell.style.minWidth = '70px'
       cell.innerHTML = `<td>${p.sawCount}</td>`
     }
 
