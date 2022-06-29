@@ -34,9 +34,9 @@ const getPostList = pageNumber => {
       cell.style.minWidth = '95px'
       cell.innerHTML = `<td>${p.categoryName}</td>`
 
-      cell = row.insertCell()
-      cell.style.minWidth = '500px'
-      cell.innerHTML = `<td><a href="#" onclick=findOnePost(${p.postId})>${p.postTitle}</a></td>`
+      tCell = row.insertCell()
+      tCell.style.minWidth = `250px`
+      tCell.innerHTML = `<td><a href="#" onclick=findOnePost(${p.postId})>${p.postTitle}</a></td>`
 
       cell = row.insertCell()
       cell.style.minWidth = '70px'
